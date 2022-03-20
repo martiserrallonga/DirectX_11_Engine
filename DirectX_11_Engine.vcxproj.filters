@@ -15,27 +15,27 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Source.cpp">
+    <ClCompile Include="Src\CErrorLogger.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="CStringConverter.cpp">
+    <ClCompile Include="Src\CRenderWindow.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="CErrorLogger.cpp">
+    <ClCompile Include="Src\CStringConverter.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="CRenderWindow.cpp">
+    <ClCompile Include="Src\Source.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="CStringConverter.h">
+    <ClInclude Include="Src\CErrorLogger.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="CErrorLogger.h">
+    <ClInclude Include="Src\CRenderWindow.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="CRenderWindow.h">
+    <ClInclude Include="Src\CStringConverter.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

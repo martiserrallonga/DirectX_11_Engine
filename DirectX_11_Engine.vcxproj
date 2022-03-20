@@ -18,6 +18,17 @@
       <Platform>x64</Platform>
     </ProjectConfiguration>
   </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Src\CErrorLogger.cpp" />
+    <ClCompile Include="Src\CRenderWindow.cpp" />
+    <ClCompile Include="Src\CStringConverter.cpp" />
+    <ClCompile Include="Src\Source.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Src\CErrorLogger.h" />
+    <ClInclude Include="Src\CRenderWindow.h" />
+    <ClInclude Include="Src\CStringConverter.h" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
@@ -154,17 +165,6 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
   </ItemDefinitionGroup>
-  <ItemGroup>
-    <ClCompile Include="CErrorLogger.cpp" />
-    <ClCompile Include="CRenderWindow.cpp" />
-    <ClCompile Include="CStringConverter.cpp" />
-    <ClCompile Include="Source.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="CErrorLogger.h" />
-    <ClInclude Include="CRenderWindow.h" />
-    <ClInclude Include="CStringConverter.h" />
-  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
