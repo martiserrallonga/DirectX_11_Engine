@@ -44,7 +44,7 @@ CRenderWindow::~CRenderWindow()
 	DestroyWindow(Handle);
 }
 
-void CRenderWindow::RegisterWindowClass()
+void CRenderWindow::RegisterWindowClass() const
 {
 	WNDCLASSEX wc; //Our Window Class (This has to be filled before our window can be created) See: https://msdn.microsoft.com/en-us/library/windows/desktop/ms633577(v=vs.85).aspx
 	wc.style = CS_HREDRAW | CS_VREDRAW | CS_OWNDC; //Flags [Redraw on width/height change from resize/movement] See: https://msdn.microsoft.com/en-us/library/windows/desktop/ff729176(v=vs.85).aspx
@@ -78,12 +78,10 @@ bool CRenderWindow::Update()
 	}
 
 	// Check if the window was closed
-	if (msg.message == WM_NULL) {
-		if (!IsWindow(Handle)) {
-			Handle = NULL;
-			UnregisterClass(mWClass.c_str(), hInstance);
-			return false;
-		}
+	if (msg.message == WM_NULL && !IsWindow(Handle)) {
+		Handle = NULL;
+		UnregisterClass(mWClass.c_str(), hInstance);
+		return false;
 	}
 
 	return true;
