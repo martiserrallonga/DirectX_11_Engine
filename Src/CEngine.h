@@ -5,6 +5,7 @@ class CEngine : public CWindowContainer
 {
 public:
 	bool Init(HINSTANCE aInstance, std::string aTitle, std::string aClass, int width, int height);
-	bool Update();
+	bool ProcessMessages();
+	void Update();
 
 };

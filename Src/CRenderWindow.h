@@ -6,12 +6,14 @@ class CWindowContainer;
 class CRenderWindow
 {
 public:
-	bool Init(CWindowContainer* aWindowContainer, HINSTANCE hInstance, std::string aWindowTitle, std::string aWindowClass, int width, int height);
-	bool Update();
 	~CRenderWindow();
+	
+	bool Init(CWindowContainer* aWindowContainer, HINSTANCE hInstance, std::string aWindowTitle, std::string aWindowClass, int width, int height);
+	bool ProcessMessages();
 
 private:
 	void RegisterWindowClass() const;
+	
 	HWND Handle = NULL;						// Handle to this Window
 	HINSTANCE hInstance = NULL;		// Handle to the Application instance
 	std::string mTitle;

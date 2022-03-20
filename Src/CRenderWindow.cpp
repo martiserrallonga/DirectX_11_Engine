@@ -1,5 +1,12 @@
 #include "CWindowContainer.h"
 
+CRenderWindow::~CRenderWindow()
+{
+	if (Handle == NULL) return;
+	UnregisterClass(mWClass.c_str(), hInstance);
+	DestroyWindow(Handle);
+}
+
 bool CRenderWindow::Init(CWindowContainer* aWindowContainer, HINSTANCE aInstance, std::string aTitle, std::string aClass, int width, int height)
 {
   hInstance = aInstance;
@@ -37,14 +44,7 @@ bool CRenderWindow::Init(CWindowContainer* aWindowContainer, HINSTANCE aInstance
   return true;
 }
 
-CRenderWindow::~CRenderWindow()
-{
-	if (Handle == NULL) return;
-	UnregisterClass(mWClass.c_str(), hInstance);
-	DestroyWindow(Handle);
-}
-
-LRESULT CALLBACK HandleMessageRedirect(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+constexpr LRESULT CALLBACK HandleMessageRedirect(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
 	switch (uMsg)
 	{
@@ -59,14 +59,13 @@ LRESULT CALLBACK HandleMessageRedirect(HWND hwnd, UINT uMsg, WPARAM wParam, LPAR
 	}
 }
 
-
-LRESULT CALLBACK HandleMessageSetup(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+constexpr LRESULT CALLBACK HandleMessageSetup(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
 	switch (uMsg)
 	{
 	case WM_NCCREATE:
 	{
-		const auto const pCreate = reinterpret_cast<CREATESTRUCTW*>(lParam);
+		const auto pCreate = reinterpret_cast<CREATESTRUCTW*>(lParam);
 		auto pWindow = reinterpret_cast<CWindowContainer*>(pCreate->lpCreateParams);
 		if (!pWindow) {
 			CErrorLogger::Log("Critical Error: Pointer to window container is nullptr during WM_NCCREATE.");
@@ -74,13 +73,13 @@ LRESULT CALLBACK HandleMessageSetup(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM 
 		}
 		OutputDebugStringA("The window was created.\n");
 		
+		SetWindowLongPtr(hwnd, GWLP_USERDATA, reinterpret_cast<LONG_PTR>(pWindow));
 		SetWindowLongPtr(hwnd, GWLP_WNDPROC, reinterpret_cast<LONG_PTR>(HandleMessageRedirect));
 		return pWindow->WindowProc(hwnd, uMsg, wParam, lParam);
 	}
 	default:
 		return DefWindowProc(hwnd, uMsg, wParam, lParam);
 	}
-
 }
 
 void CRenderWindow::RegisterWindowClass() const
@@ -101,7 +100,7 @@ void CRenderWindow::RegisterWindowClass() const
 	RegisterClassEx(&wc); //Register the class so that it is usable.
 }
 
-bool CRenderWindow::Update()
+bool CRenderWindow::ProcessMessages()
 {
 	MSG msg;
 	ZeroMemory(&msg, sizeof(MSG));

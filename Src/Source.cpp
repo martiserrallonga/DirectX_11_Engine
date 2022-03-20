@@ -13,8 +13,9 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 	CEngine Engine;
 	Engine.Init(hInstance, "Title", "MyWindowClass", 800, 600);
 
-	while (Engine.Update())
+	while (Engine.ProcessMessages())
 	{
+		Engine.Update();
 		Sleep(50);
 	}
 	
