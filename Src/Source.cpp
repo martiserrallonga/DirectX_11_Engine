@@ -1,4 +1,5 @@
 #include "CRenderWindow.h"
+#include "CEngine.h"
 
 #pragma comment(lib, "d3d11.lib")
 #pragma comment(lib, "DirectXTK.lib")
@@ -9,10 +10,10 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 	_In_ int nCmdShow)
 {
 
-	CRenderWindow RenderWindow;
-	RenderWindow.Init(hInstance, "Title", "MyWindowClass", 800, 600);
+	CEngine Engine;
+	Engine.Init(hInstance, "Title", "MyWindowClass", 800, 600);
 
-	while (RenderWindow.Update())
+	while (Engine.Update())
 	{
 		Sleep(50);
 	}

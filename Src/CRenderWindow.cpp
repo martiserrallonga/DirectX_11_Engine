@@ -1,6 +1,6 @@
-#include "CRenderWindow.h"
+#include "CWindowContainer.h"
 
-bool CRenderWindow::Init(HINSTANCE aInstance, std::string aTitle, std::string aClass, int width, int height)
+bool CRenderWindow::Init(CWindowContainer* aWindowContainer, HINSTANCE aInstance, std::string aTitle, std::string aClass, int width, int height)
 {
   hInstance = aInstance;
   mTitle = aTitle;
@@ -23,7 +23,7 @@ bool CRenderWindow::Init(HINSTANCE aInstance, std::string aTitle, std::string aC
 		NULL,					//Handle to parent of this window. Since this is the first window, it has no parent window.
 		NULL,					//Handle to menu or child window identifier. Can be set to NULL and use menu in WindowClassEx if a menu is desired to be used.
 		hInstance,		//Handle to the instance of module to be used with this window
-		nullptr);			//Param to create window
+		aWindowContainer); //Param to create window
 
 	if (Handle == NULL) {
 		CErrorLogger::Log(GetLastError(), "CreateWindowEx Failed for window " + mTitle);
@@ -44,11 +44,50 @@ CRenderWindow::~CRenderWindow()
 	DestroyWindow(Handle);
 }
 
+LRESULT CALLBACK HandleMessageRedirect(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+{
+	switch (uMsg)
+	{
+	case WM_CLOSE:
+		DestroyWindow(hwnd);
+		return 0;
+	default:
+	{
+		auto const pWindow = reinterpret_cast<CWindowContainer*>(GetWindowLongPtr(hwnd, GWLP_USERDATA));
+		return pWindow->WindowProc(hwnd, uMsg, wParam, lParam);
+	}
+	}
+}
+
+
+LRESULT CALLBACK HandleMessageSetup(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+{
+	switch (uMsg)
+	{
+	case WM_NCCREATE:
+	{
+		const auto const pCreate = reinterpret_cast<CREATESTRUCTW*>(lParam);
+		auto pWindow = reinterpret_cast<CWindowContainer*>(pCreate->lpCreateParams);
+		if (!pWindow) {
+			CErrorLogger::Log("Critical Error: Pointer to window container is nullptr during WM_NCCREATE.");
+			exit(-1);
+		}
+		OutputDebugStringA("The window was created.\n");
+		
+		SetWindowLongPtr(hwnd, GWLP_WNDPROC, reinterpret_cast<LONG_PTR>(HandleMessageRedirect));
+		return pWindow->WindowProc(hwnd, uMsg, wParam, lParam);
+	}
+	default:
+		return DefWindowProc(hwnd, uMsg, wParam, lParam);
+	}
+
+}
+
 void CRenderWindow::RegisterWindowClass() const
 {
 	WNDCLASSEX wc; //Our Window Class (This has to be filled before our window can be created) See: https://msdn.microsoft.com/en-us/library/windows/desktop/ms633577(v=vs.85).aspx
 	wc.style = CS_HREDRAW | CS_VREDRAW | CS_OWNDC; //Flags [Redraw on width/height change from resize/movement] See: https://msdn.microsoft.com/en-us/library/windows/desktop/ff729176(v=vs.85).aspx
-	wc.lpfnWndProc = DefWindowProc; //Pointer to Window Proc function for handling messages from this window
+	wc.lpfnWndProc = HandleMessageSetup; //Pointer to Window Proc function for handling messages from this window
 	wc.cbClsExtra = 0; //# of extra bytes to allocate following the window-class structure. We are not currently using this.
 	wc.cbWndExtra = 0; //# of extra bytes to allocate following the window instance. We are not currently using this.
 	wc.hInstance = hInstance; //Handle to the instance that contains the Window Procedure

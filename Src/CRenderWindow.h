@@ -1,10 +1,12 @@
 #pragma once
 #include "CErrorLogger.h"
 
+class CWindowContainer;
+
 class CRenderWindow
 {
 public:
-	bool Init(HINSTANCE hInstance, std::string aWindowTitle, std::string aWindowClass, int width, int height);
+	bool Init(CWindowContainer* aWindowContainer, HINSTANCE hInstance, std::string aWindowTitle, std::string aWindowClass, int width, int height);
 	bool Update();
 	~CRenderWindow();
 

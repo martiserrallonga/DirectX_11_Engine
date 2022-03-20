@@ -19,15 +19,19 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Src\CEngine.cpp" />
     <ClCompile Include="Src\CErrorLogger.cpp" />
     <ClCompile Include="Src\CRenderWindow.cpp" />
     <ClCompile Include="Src\CStringConverter.cpp" />
+    <ClCompile Include="Src\CWindowContainer.cpp" />
     <ClCompile Include="Src\Source.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Src\CEngine.h" />
     <ClInclude Include="Src\CErrorLogger.h" />
     <ClInclude Include="Src\CRenderWindow.h" />
     <ClInclude Include="Src\CStringConverter.h" />
+    <ClInclude Include="Src\CWindowContainer.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
