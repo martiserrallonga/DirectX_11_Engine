@@ -25,6 +25,65 @@ LRESULT CWindowContainer::WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM
 		if (Keyboard.IsAutoRepeatChars() || !(lParam & WasCharPressedBit)) Keyboard.OnChar(ch);
 		break;
 	}
+	// Mouse Messages
+	case WM_MOUSEMOVE:
+	{
+		int x = LOWORD(lParam);
+		int y = HIWORD(lParam);
+		Mouse.OnMouseMove({ x, y });
+		break;
+	}
+	case WM_LBUTTONDOWN:
+	{
+		int x = LOWORD(lParam);
+		int y = HIWORD(lParam);
+		Mouse.OnLeftPressed({ x, y });
+		break;
+	}
+	case WM_LBUTTONUP:
+	{
+		int x = LOWORD(lParam);
+		int y = HIWORD(lParam);
+		Mouse.OnLeftReleased({ x, y });
+		break;
+	}
+	case WM_RBUTTONDOWN:
+	{
+		int x = LOWORD(lParam);
+		int y = HIWORD(lParam);
+		Mouse.OnRightPressed({ x, y });
+		break;
+	}
+	case WM_RBUTTONUP:
+	{
+		int x = LOWORD(lParam);
+		int y = HIWORD(lParam);
+		Mouse.OnRightReleased({ x, y });
+		break;
+	}
+	case WM_MBUTTONDOWN:
+	{
+		int x = LOWORD(lParam);
+		int y = HIWORD(lParam);
+		Mouse.OnMiddlePressed({ x, y });
+		break;
+	}
+	case WM_MBUTTONUP:
+	{
+		int x = LOWORD(lParam);
+		int y = HIWORD(lParam);
+		Mouse.OnMiddleReleased({ x, y });
+		break;
+	}
+	case WM_MOUSEWHEEL:
+	{
+		int x = LOWORD(lParam);
+		int y = HIWORD(lParam);
+		GET_WHEEL_DELTA_WPARAM(wParam) > 0
+			? Mouse.OnWheelUp({ x,y })
+			: Mouse.OnWheelDown({ x,y });
+		break;
+	}
 	default:
 		return DefWindowProc(hwnd, uMsg, wParam, lParam);
 	}
