@@ -42,6 +42,12 @@ void CMouse::OnMouseMove(TMousePoint aPoint)
 	mEventBuffer.emplace(EEvent::Move, aPoint);
 }
 
+void CMouse::OnMouseRawMove(TMousePoint aPoint)
+{
+	mPoint = aPoint;
+	mEventBuffer.emplace(EEvent::RawMove, aPoint);
+}
+
 void CMouse::OnLeftPressed(TMousePoint aPoint)
 {
 	mLeftPressed = true;

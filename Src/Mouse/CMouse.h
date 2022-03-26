@@ -14,6 +14,7 @@ public:
 	bool IsEventBufferEmpty() const;
 	
 	void OnMouseMove(TMousePoint aPoint);
+	void OnMouseRawMove(TMousePoint aPoint);
 	void OnLeftPressed(TMousePoint aPoint);
 	void OnLeftReleased(TMousePoint aPoint);
 	void OnRightPressed(TMousePoint aPoint);

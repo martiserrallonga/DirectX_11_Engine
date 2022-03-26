@@ -44,6 +44,7 @@ void CEngine::Update()
 		msg += std::to_string(pos.y);
 		msg += "]";
 
+		if (Event.GetType() == CMouseEvent::EEventType::RawMove) msg += " Raw";
 		if (Event.GetType() == CMouseEvent::EEventType::RPress) msg += " RPress";
 		if (Event.GetType() == CMouseEvent::EEventType::RRelease) msg += " RRelease";
 		if (Event.GetType() == CMouseEvent::EEventType::LPress) msg += " LPress";

@@ -16,7 +16,6 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 	while (Engine.ProcessMessages())
 	{
 		Engine.Update();
-		Sleep(50);
 	}
 	
 	return 0;
