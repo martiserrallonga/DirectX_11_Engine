@@ -62,3 +62,8 @@ void CEngine::Update()
 	}
 
 }
+
+void CEngine::Render()
+{
+	Graphics.Render();
+}

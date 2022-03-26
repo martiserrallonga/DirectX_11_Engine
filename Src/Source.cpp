@@ -13,6 +13,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 	while (Engine.ProcessMessages())
 	{
 		Engine.Update();
+		Engine.Render();
 	}
 	
 	return 0;
