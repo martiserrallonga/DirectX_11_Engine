@@ -25,6 +25,12 @@
     <Filter Include="Source Files\Mouse">
       <UniqueIdentifier>{ea953eb7-9534-4a1f-beb0-b7a7f2bb3849}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Graphics">
+      <UniqueIdentifier>{f164c286-badf-4d8e-8185-2c68821a14ca}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Graphics">
+      <UniqueIdentifier>{67e351a8-d7b3-4499-a9e0-5e2f455f4720}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Src\CErrorLogger.cpp">
@@ -57,6 +63,12 @@
     <ClCompile Include="Src\Mouse\CMouseEvent.cpp">
       <Filter>Source Files\Mouse</Filter>
     </ClCompile>
+    <ClCompile Include="Src\Graphics\CGraphics.cpp">
+      <Filter>Source Files\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Graphics\CAdapterReader.cpp">
+      <Filter>Source Files\Graphics</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Src\CErrorLogger.h">
@@ -85,6 +97,12 @@
     </ClInclude>
     <ClInclude Include="Src\Mouse\CMouseEvent.h">
       <Filter>Header Files\Mouse</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Graphics\CGraphics.h">
+      <Filter>Header Files\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Graphics\CAdapterReader.h">
+      <Filter>Header Files\Graphics</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -124,3 +124,8 @@ bool CRenderWindow::ProcessMessages()
 
 	return true;
 }
+
+HWND CRenderWindow::GetHWND() const
+{
+	return Handle;
+}

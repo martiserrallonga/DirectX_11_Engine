@@ -2,7 +2,10 @@
 
 bool CEngine::Init(HINSTANCE aInstance, std::string aTitle, std::string aClass, int width, int height)
 {
-	return RenderWindow.Init(this, aInstance, aTitle, aClass, width, height);
+	if (!RenderWindow.Init(this, aInstance, aTitle, aClass, width, height)) return false;
+	if (!Graphics.Init(RenderWindow.GetHWND(), width, height)) return false;
+
+	return true;
 }
 
 bool CEngine::ProcessMessages()

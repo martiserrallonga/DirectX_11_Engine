@@ -2,6 +2,7 @@
 #include "CRenderWindow.h"
 #include "CKeyboard.h"
 #include "CMouse.h"
+#include "CGraphics.h"
 
 class CWindowContainer
 {
@@ -14,5 +15,6 @@ protected:
 	CRenderWindow RenderWindow;
 	CKeyboard Keyboard;
 	CMouse Mouse;
+	CGraphics Graphics;
 
 };

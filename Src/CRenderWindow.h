@@ -10,6 +10,7 @@ public:
 	
 	bool Init(CWindowContainer* aWindowContainer, HINSTANCE hInstance, std::string aWindowTitle, std::string aWindowClass, int width, int height);
 	bool ProcessMessages();
+	HWND GetHWND() const;
 
 private:
 	void RegisterWindowClass() const;
