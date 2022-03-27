@@ -85,6 +85,27 @@ bool CGraphics::InitDirectX(HWND hwnd, int width, int height)
 
 bool CGraphics::InitShaders()
 {
+	std::wstring ShaderFolder;
+
+#pragma region GetShaderFolder
+	if (IsDebuggerPresent() == TRUE)
+	{
+#ifdef _X86_
+		ShaderFolder = L"Build/Win32/";
+#else
+		ShaderFolder = L"Build/x64/";
+#endif
+
+#ifdef _DEBUG
+		ShaderFolder += L"Debug/";
+#else
+		ShaderFolder += L"Release/";
+#endif
+	}
+#pragma endregion
+
+	if (!mVertexShader.Init(mDevice, ShaderFolder + L"VertexShader.cso")) return false;
+
 	// Take a look to DXGI_FORMAT::DXGI_FORMAT_R32G32_FLOAT
 	D3D11_INPUT_ELEMENT_DESC Layout[]{
 		{
@@ -103,8 +124,8 @@ bool CGraphics::InitShaders()
 	HRESULT hr = mDevice->CreateInputLayout(
 		Layout,
 		NumElements,
-		mVertexShaderBuffer->GetBufferPointer(),
-		mVertexShaderBuffer->GetBufferSize(),
+		mVertexShader.GetBuffer()->GetBufferPointer(),
+		mVertexShader.GetBuffer()->GetBufferSize(),
 		mInputLayout.GetAddressOf()
 	);
 
@@ -113,5 +134,5 @@ bool CGraphics::InitShaders()
 		return false;
 	}
 
-	return false;
+	return true;
 }

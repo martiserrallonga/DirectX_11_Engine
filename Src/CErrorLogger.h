@@ -7,6 +7,7 @@ class CErrorLogger
 public:
 	static void Log(std::string aMessage);
 	static void Log(HRESULT hr, std::string aMessage);
+	static void Log(HRESULT hr, std::wstring aMessage);
 
 };
 

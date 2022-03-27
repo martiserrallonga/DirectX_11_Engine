@@ -1,5 +1,6 @@
 #pragma once
 #include "CAdapterReader.h"
+#include "Shaders.h"
 
 class CGraphics
 {
@@ -17,7 +18,6 @@ private:
 	Microsoft::WRL::ComPtr<ID3D11RenderTargetView> mRenderTargetView;
 
 	Microsoft::WRL::ComPtr<ID3D11InputLayout> mInputLayout;
-	Microsoft::WRL::ComPtr<ID3D10Blob> mVertexShaderBuffer;
-
+	CVertexShader mVertexShader;
 
 };

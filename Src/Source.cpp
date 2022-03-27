@@ -8,7 +8,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 {
 
 	CEngine Engine;
-	Engine.Init(hInstance, "Title", "MyWindowClass", 800, 600);
+	if (!Engine.Init(hInstance, "Title", "MyWindowClass", 800, 600)) return 0;
 
 	while (Engine.ProcessMessages())
 	{
