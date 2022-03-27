@@ -37,6 +37,7 @@
     <ClInclude Include="Src\CEngine.h" />
     <ClInclude Include="Src\CErrorLogger.h" />
     <ClInclude Include="Src\Graphics\CGraphics.h" />
+    <ClInclude Include="Src\Graphics\CVertexShader.h" />
     <ClInclude Include="Src\Keyboard\CKeyboard.h" />
     <ClInclude Include="Src\Keyboard\CKeyboardEvent.h" />
     <ClInclude Include="Src\CRenderWindow.h" />

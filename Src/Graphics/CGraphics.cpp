@@ -3,6 +3,8 @@
 bool CGraphics::Init(HWND hwnd, int width, int height)
 {
 	if (!InitDirectX(hwnd, width, height)) return false;
+	if (!InitShaders()) return false;
+
 	return true;
 }
 
@@ -79,4 +81,37 @@ bool CGraphics::InitDirectX(HWND hwnd, int width, int height)
 	mDeviceContext->OMSetRenderTargets(1, mRenderTargetView.GetAddressOf(), NULL);
 
 	return true;
+}
+
+bool CGraphics::InitShaders()
+{
+	// Take a look to DXGI_FORMAT::DXGI_FORMAT_R32G32_FLOAT
+	D3D11_INPUT_ELEMENT_DESC Layout[]{
+		{
+			"POSITION",
+			0,
+			DXGI_FORMAT_R32G32_FLOAT,
+			0,
+			0, // Also could be D3D11_APPEND_ALIGNED_ELEMENT
+			D3D11_INPUT_CLASSIFICATION::D3D11_INPUT_PER_VERTEX_DATA,
+			0
+		}
+	};
+	
+	UINT NumElements = ARRAYSIZE(Layout);
+
+	HRESULT hr = mDevice->CreateInputLayout(
+		Layout,
+		NumElements,
+		mVertexShaderBuffer->GetBufferPointer(),
+		mVertexShaderBuffer->GetBufferSize(),
+		mInputLayout.GetAddressOf()
+	);
+
+	if (FAILED(hr)) {
+		CErrorLogger::Log(hr, "Failed to create Input Layout");
+		return false;
+	}
+
+	return false;
 }
