@@ -1,8 +1,8 @@
 #include "CGraphics.h"
 
-bool CGraphics::Init(HWND hwnd, int width, int height)
+bool CGraphics::Init(HWND hwnd, int aWidth, int aHeight)
 {
-	if (!InitDirectX(hwnd, width, height)) return false;
+	if (!InitDirectX(hwnd, aWidth, aHeight)) return false;
 	if (!InitShaders()) return false;
 
 	return true;
@@ -15,7 +15,7 @@ void CGraphics::Render()
 	mSwapChain->Present(1, NULL);
 }
 
-bool CGraphics::InitDirectX(HWND hwnd, int width, int height)
+bool CGraphics::InitDirectX(HWND hwnd, int aWidth, int aHeight)
 {
 	std::vector<TAdapter> Adapters = CAdapterReader::GetAdapters();
 	if (Adapters.empty()) {
@@ -26,8 +26,8 @@ bool CGraphics::InitDirectX(HWND hwnd, int width, int height)
 	DXGI_SWAP_CHAIN_DESC Scd;
 	ZeroMemory(&Scd, sizeof(DXGI_SWAP_CHAIN_DESC));
 
-	Scd.BufferDesc.Width = width;
-	Scd.BufferDesc.Height = height;
+	Scd.BufferDesc.Width = aWidth;
+	Scd.BufferDesc.Height = aHeight;
 	Scd.BufferDesc.RefreshRate.Numerator = 60;
 	Scd.BufferDesc.RefreshRate.Denominator = 1;
 	Scd.BufferDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
@@ -80,6 +80,16 @@ bool CGraphics::InitDirectX(HWND hwnd, int width, int height)
 
 	mDeviceContext->OMSetRenderTargets(1, mRenderTargetView.GetAddressOf(), NULL);
 
+	D3D11_VIEWPORT Viewport;
+	ZeroMemory(&Viewport, sizeof(D3D11_VIEWPORT));
+
+	Viewport.TopLeftX = 0;
+	Viewport.TopLeftY = 0;
+	Viewport.Width = aWidth;
+	Viewport.Height = aHeight;
+	mDeviceContext->RSSetViewports(1, &Viewport);
+
+
 	return true;
 }
 
@@ -104,7 +114,6 @@ bool CGraphics::InitShaders()
 	}
 #pragma endregion
 
-
 	// Take a look to DXGI_FORMAT::DXGI_FORMAT_R32G32_FLOAT
 	D3D11_INPUT_ELEMENT_DESC Layout[]{
 		{
@@ -119,6 +128,7 @@ bool CGraphics::InitShaders()
 	};
 	
 	if (!mVertexShader.Init(mDevice, ShaderFolder + L"VertexShader.cso", Layout, ARRAYSIZE(Layout))) return false;
+	if (!mPixelShader.Init(mDevice, ShaderFolder + L"PixelShader.cso")) return false;
 
 	return true;
 }

@@ -35,3 +35,15 @@ private:
 	Microsoft::WRL::ComPtr<ID3D11InputLayout> mInputLayout;
 
 };
+
+class CPixelShader
+{
+public:
+	bool Init(Microsoft::WRL::ComPtr<ID3D11Device>& aDevice, std::wstring aShaderPath);
+	ID3D11PixelShader* GetShader();
+	ID3D10Blob* GetBuffer();
+
+private:
+	Microsoft::WRL::ComPtr<ID3D11PixelShader> mShader;
+	Microsoft::WRL::ComPtr<ID3D10Blob> mShaderBuffer;
+};

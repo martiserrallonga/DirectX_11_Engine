@@ -5,11 +5,11 @@
 class CGraphics
 {
 public:
-	bool Init(HWND hwnd, int width, int height);
+	bool Init(HWND hwnd, int aWidth, int aHeight);
 	void Render();
 
 private:
-	bool InitDirectX(HWND hwnd, int width, int height);
+	bool InitDirectX(HWND hwnd, int aWidth, int aHeight);
 	bool InitShaders();
 
 	Microsoft::WRL::ComPtr<ID3D11Device> mDevice;
@@ -18,5 +18,6 @@ private:
 	Microsoft::WRL::ComPtr<ID3D11RenderTargetView> mRenderTargetView;
 
 	CVertexShader mVertexShader;
+	CPixelShader mPixelShader;
 
 };
