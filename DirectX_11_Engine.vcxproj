@@ -19,32 +19,32 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Src\Graphics\Shaders.cpp" />
-    <ClCompile Include="Src\Graphics\CAdapterReader.cpp" />
     <ClCompile Include="Src\CEngine.cpp" />
     <ClCompile Include="Src\CErrorLogger.cpp" />
-    <ClCompile Include="Src\Graphics\CGraphics.cpp" />
-    <ClCompile Include="Src\Keyboard\CKeyboard.cpp" />
-    <ClCompile Include="Src\Keyboard\CKeyboardEvent.cpp" />
     <ClCompile Include="Src\CRenderWindow.cpp" />
     <ClCompile Include="Src\CStringConverter.cpp" />
     <ClCompile Include="Src\CWindowContainer.cpp" />
+    <ClCompile Include="Src\Graphics\CAdapterReader.cpp" />
+    <ClCompile Include="Src\Graphics\CGraphics.cpp" />
+    <ClCompile Include="Src\Graphics\Shaders.cpp" />
+    <ClCompile Include="Src\Keyboard\CKeyboard.cpp" />
+    <ClCompile Include="Src\Keyboard\CKeyboardEvent.cpp" />
     <ClCompile Include="Src\Mouse\CMouse.cpp" />
     <ClCompile Include="Src\Mouse\CMouseEvent.cpp" />
     <ClCompile Include="Src\Source.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Src\Graphics\Shaders.h" />
-    <ClInclude Include="Src\Graphics\CAdapterReader.h" />
     <ClInclude Include="Src\CEngine.h" />
     <ClInclude Include="Src\CErrorLogger.h" />
-    <ClInclude Include="Src\Graphics\CGraphics.h" />
-    <ClInclude Include="Src\Graphics\TVertex.h" />
-    <ClInclude Include="Src\Keyboard\CKeyboard.h" />
-    <ClInclude Include="Src\Keyboard\CKeyboardEvent.h" />
     <ClInclude Include="Src\CRenderWindow.h" />
     <ClInclude Include="Src\CStringConverter.h" />
     <ClInclude Include="Src\CWindowContainer.h" />
+    <ClInclude Include="Src\Graphics\CAdapterReader.h" />
+    <ClInclude Include="Src\Graphics\CGraphics.h" />
+    <ClInclude Include="Src\Graphics\Shaders.h" />
+    <ClInclude Include="Src\Graphics\TVertex.h" />
+    <ClInclude Include="Src\Keyboard\CKeyboard.h" />
+    <ClInclude Include="Src\Keyboard\CKeyboardEvent.h" />
     <ClInclude Include="Src\Mouse\CMouse.h" />
     <ClInclude Include="Src\Mouse\CMouseEvent.h" />
   </ItemGroup>
