@@ -12,7 +12,7 @@ bool CGraphics::Init(HWND hwnd, int aWidth, int aHeight)
 
 void CGraphics::Render()
 {
-	float BackgroundColor[] = { 0.f, 0.f, 1.f, 1.f };
+	float BackgroundColor[] = { 0.f, 0.f, 0.f, 1.f };
 	mDeviceContext->ClearRenderTargetView(mRenderTargetView.Get(), BackgroundColor);
 
 	mDeviceContext->IASetInputLayout(mVertexShader.GetInputLayout());
@@ -133,16 +133,10 @@ bool CGraphics::InitShaders()
 #pragma endregion
 
 	// Take a look to DXGI_FORMAT::DXGI_FORMAT_R32G32_FLOAT
+	auto ipvd = D3D11_INPUT_CLASSIFICATION::D3D11_INPUT_PER_VERTEX_DATA;
 	D3D11_INPUT_ELEMENT_DESC Layout[]{
-		{
-			"POSITION",
-			0,
-			DXGI_FORMAT_R32G32_FLOAT,
-			0,
-			0, // Also could be D3D11_APPEND_ALIGNED_ELEMENT
-			D3D11_INPUT_CLASSIFICATION::D3D11_INPUT_PER_VERTEX_DATA,
-			0
-		}
+		{"POSITION", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 0, ipvd, 0 },
+		{"COLOR", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, ipvd, 0 },
 	};
 	
 	if (!mVertexShader.Init(mDevice, ShaderFolder + L"VertexShader.cso", Layout, ARRAYSIZE(Layout))) return false;
@@ -155,10 +149,9 @@ bool CGraphics::InitScene()
 {
 	TVertex v[] =
 	{
-		TVertex(0.f, -0.1f),
-		TVertex(0.f, 0.1f),
-		TVertex(0.1f, 0.f),
-		TVertex(-0.1f, 0.f),
+		TVertex(-0.5f, -0.5f, 1.f, 0.f, 0.f),
+		TVertex(+0.0f, +0.5f, 0.f, 1.f, 0.f),
+		TVertex(+0.5f, -0.5f, 0.f, 0.f, 1.f),
 	};
 
 	D3D11_BUFFER_DESC VertexBufferDescr;
