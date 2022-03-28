@@ -34,11 +34,12 @@
     <ClCompile Include="Src\Source.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Src\Graphics\Shaders.h" />
+    <ClInclude Include="Src\Graphics\Shaders.h" />
     <ClInclude Include="Src\Graphics\CAdapterReader.h" />
     <ClInclude Include="Src\CEngine.h" />
     <ClInclude Include="Src\CErrorLogger.h" />
     <ClInclude Include="Src\Graphics\CGraphics.h" />
+    <ClInclude Include="Src\Graphics\TVertex.h" />
     <ClInclude Include="Src\Keyboard\CKeyboard.h" />
     <ClInclude Include="Src\Keyboard\CKeyboardEvent.h" />
     <ClInclude Include="Src\CRenderWindow.h" />

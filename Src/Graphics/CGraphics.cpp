@@ -1,9 +1,11 @@
 #include "CGraphics.h"
+#include "TVertex.h"
 
 bool CGraphics::Init(HWND hwnd, int aWidth, int aHeight)
 {
 	if (!InitDirectX(hwnd, aWidth, aHeight)) return false;
 	if (!InitShaders()) return false;
+	if (!InitScene()) return false;
 
 	return true;
 }
@@ -12,6 +14,22 @@ void CGraphics::Render()
 {
 	float BackgroundColor[] = { 0.f, 0.f, 1.f, 1.f };
 	mDeviceContext->ClearRenderTargetView(mRenderTargetView.Get(), BackgroundColor);
+
+	mDeviceContext->IASetInputLayout(mVertexShader.GetInputLayout());
+	//mDeviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY::D3D10_PRIMITIVE_TOPOLOGY_POINTLIST);
+	//mDeviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY::D3D10_PRIMITIVE_TOPOLOGY_LINELIST);
+	//mDeviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY::D3D10_PRIMITIVE_TOPOLOGY_LINESTRIP);
+	mDeviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY::D3D10_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+
+	mDeviceContext->VSSetShader(mVertexShader.GetShader(), NULL, 0);
+	mDeviceContext->PSSetShader(mPixelShader.GetShader(), NULL, 0);
+
+	UINT Stride = sizeof(TVertex);
+	UINT Offset = 0;
+	mDeviceContext->IASetVertexBuffers(0, 1, mVertexBuffer.GetAddressOf(), &Stride, &Offset);
+
+	mDeviceContext->Draw(3, 0);
+
 	mSwapChain->Present(1, NULL);
 }
 
@@ -129,6 +147,38 @@ bool CGraphics::InitShaders()
 	
 	if (!mVertexShader.Init(mDevice, ShaderFolder + L"VertexShader.cso", Layout, ARRAYSIZE(Layout))) return false;
 	if (!mPixelShader.Init(mDevice, ShaderFolder + L"PixelShader.cso")) return false;
+
+	return true;
+}
+
+bool CGraphics::InitScene()
+{
+	TVertex v[] =
+	{
+		TVertex(0.f, -0.1f),
+		TVertex(0.f, 0.1f),
+		TVertex(0.1f, 0.f),
+		TVertex(-0.1f, 0.f),
+	};
+
+	D3D11_BUFFER_DESC VertexBufferDescr;
+	ZeroMemory(&VertexBufferDescr, sizeof(D3D11_BUFFER_DESC));
+
+	VertexBufferDescr.Usage = D3D11_USAGE_DEFAULT;
+	VertexBufferDescr.ByteWidth = sizeof(TVertex) * ARRAYSIZE(v);
+	VertexBufferDescr.BindFlags = D3D11_BIND_VERTEX_BUFFER;
+	VertexBufferDescr.CPUAccessFlags = 0;
+	VertexBufferDescr.MiscFlags = 0;
+
+	D3D11_SUBRESOURCE_DATA VertexBufferData;
+	ZeroMemory(&VertexBufferData, sizeof(D3D11_SUBRESOURCE_DATA));
+	VertexBufferData.pSysMem = v;
+
+	HRESULT hr = mDevice->CreateBuffer(&VertexBufferDescr, &VertexBufferData, mVertexBuffer.GetAddressOf());
+	if (FAILED(hr)) {
+		CErrorLogger::Log(hr, "Failed to create vertex buffer.");
+		return false;
+	}
 
 	return true;
 }

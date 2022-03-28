@@ -11,6 +11,7 @@ public:
 private:
 	bool InitDirectX(HWND hwnd, int aWidth, int aHeight);
 	bool InitShaders();
+	bool InitScene();
 
 	Microsoft::WRL::ComPtr<ID3D11Device> mDevice;
 	Microsoft::WRL::ComPtr<ID3D11DeviceContext> mDeviceContext;
@@ -20,4 +21,5 @@ private:
 	CVertexShader mVertexShader;
 	CPixelShader mPixelShader;
 
+	Microsoft::WRL::ComPtr<ID3D11Buffer> mVertexBuffer;
 };
