@@ -104,7 +104,6 @@ bool CGraphics::InitShaders()
 	}
 #pragma endregion
 
-	if (!mVertexShader.Init(mDevice, ShaderFolder + L"VertexShader.cso")) return false;
 
 	// Take a look to DXGI_FORMAT::DXGI_FORMAT_R32G32_FLOAT
 	D3D11_INPUT_ELEMENT_DESC Layout[]{
@@ -119,20 +118,7 @@ bool CGraphics::InitShaders()
 		}
 	};
 	
-	UINT NumElements = ARRAYSIZE(Layout);
-
-	HRESULT hr = mDevice->CreateInputLayout(
-		Layout,
-		NumElements,
-		mVertexShader.GetBuffer()->GetBufferPointer(),
-		mVertexShader.GetBuffer()->GetBufferSize(),
-		mInputLayout.GetAddressOf()
-	);
-
-	if (FAILED(hr)) {
-		CErrorLogger::Log(hr, "Failed to create Input Layout");
-		return false;
-	}
+	if (!mVertexShader.Init(mDevice, ShaderFolder + L"VertexShader.cso", Layout, ARRAYSIZE(Layout))) return false;
 
 	return true;
 }
