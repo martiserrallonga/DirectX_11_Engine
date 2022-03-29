@@ -20,6 +20,7 @@ void CGraphics::Render()
 	//mDeviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY::D3D10_PRIMITIVE_TOPOLOGY_LINELIST);
 	//mDeviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY::D3D10_PRIMITIVE_TOPOLOGY_LINESTRIP);
 	mDeviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY::D3D10_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+	mDeviceContext->RSSetState(mRasterizerState.Get());
 
 	mDeviceContext->VSSetShader(mVertexShader.GetShader(), NULL, 0);
 	mDeviceContext->PSSetShader(mPixelShader.GetShader(), NULL, 0);
@@ -107,6 +108,19 @@ bool CGraphics::InitDirectX(HWND hwnd, int aWidth, int aHeight)
 	Viewport.Height = aHeight;
 	mDeviceContext->RSSetViewports(1, &Viewport);
 
+	CD3D11_RASTERIZER_DESC RasterizerDesc;
+	ZeroMemory(&RasterizerDesc, sizeof(CD3D11_RASTERIZER_DESC));
+
+	RasterizerDesc.FillMode = D3D11_FILL_MODE::D3D11_FILL_SOLID;
+	//RasterizerDesc.FillMode = D3D11_FILL_MODE::D3D11_FILL_WIREFRAME;
+	RasterizerDesc.CullMode = D3D11_CULL_MODE::D3D11_CULL_BACK;
+	
+	hr = mDevice->CreateRasterizerState(&RasterizerDesc, mRasterizerState.GetAddressOf());
+
+	if (FAILED(hr)) {
+		CErrorLogger::Log(hr, "Failed to create rasterizer state.");
+		return false;
+	}
 
 	return true;
 }
