@@ -2,6 +2,9 @@
 #include "CAdapterReader.h"
 #include "Shaders.h"
 
+#include <SpriteBatch.h>
+#include <SpriteFont.h>
+
 class CGraphics
 {
 public:
@@ -29,5 +32,8 @@ private:
 	Microsoft::WRL::ComPtr<ID3D11DepthStencilState> mDepthStencilState;
 
 	Microsoft::WRL::ComPtr<ID3D11RasterizerState> mRasterizerState;
+	
+	std::unique_ptr<DirectX::SpriteBatch> mSpriteBatch;
+	std::unique_ptr<DirectX::SpriteFont> mSpriteFont;
 
 };
