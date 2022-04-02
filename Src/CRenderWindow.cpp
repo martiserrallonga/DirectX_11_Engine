@@ -19,18 +19,28 @@ bool CRenderWindow::Init(CWindowContainer* aWindowContainer, HINSTANCE aInstance
 
   RegisterWindowClass();
 
+	int CenterScreenX = (GetSystemMetrics(SM_CXSCREEN) - mWidth) / 2;
+	int CenterScreenY = (GetSystemMetrics(SM_CYSCREEN) - mHeight) / 2;
+
+	RECT WindowRect;
+	WindowRect.left = CenterScreenX;
+	WindowRect.top = CenterScreenY;
+	WindowRect.right = WindowRect.left + mWidth;
+	WindowRect.bottom = WindowRect.top + mHeight;
+	AdjustWindowRect(&WindowRect, WS_CAPTION | WS_MINIMIZEBOX | WS_SYSMENU, FALSE);
+
 	Handle = CreateWindowEx(0, //Extended Windows style - we are using the default. For other options, see: https://msdn.microsoft.com/en-us/library/windows/desktop/ff700543(v=vs.85).aspx
-		mWClass.c_str(), //Window class name
-		mWTitle.c_str(), //Window Title
+		mWClass.c_str(),		//Window class name
+		mWTitle.c_str(),		//Window Title
 		WS_CAPTION | WS_MINIMIZEBOX | WS_SYSMENU, //Windows style - See: https://msdn.microsoft.com/en-us/library/windows/desktop/ms632600(v=vs.85).aspx
-		0,						//Window X Position
-		0,						//Window Y Position
-		mWidth,				//Window Width
-		mHeight,			//Window Height
-		NULL,					//Handle to parent of this window. Since this is the first window, it has no parent window.
-		NULL,					//Handle to menu or child window identifier. Can be set to NULL and use menu in WindowClassEx if a menu is desired to be used.
-		hInstance,		//Handle to the instance of module to be used with this window
-		aWindowContainer); //Param to create window
+		WindowRect.left,
+		WindowRect.top,
+		WindowRect.right - WindowRect.left,
+		WindowRect.bottom - WindowRect.top,
+		NULL,								//Handle to parent of this window. Since this is the first window, it has no parent window.
+		NULL,								//Handle to menu or child window identifier. Can be set to NULL and use menu in WindowClassEx if a menu is desired to be used.
+		hInstance,					//Handle to the instance of module to be used with this window
+		aWindowContainer);	//Param to create window
 
 	if (Handle == NULL) {
 		CErrorLogger::Log(GetLastError(), "CreateWindowEx Failed for window " + mTitle);
