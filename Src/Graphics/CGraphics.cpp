@@ -34,7 +34,9 @@ void CGraphics::Render()
 	// Square
 	mDeviceContext->PSSetShaderResources(0, 1, mTexture.GetAddressOf());
 	mDeviceContext->IASetVertexBuffers(0, 1, mVertexBuffer.GetAddressOf(), &Stride, &Offset);
-	mDeviceContext->Draw(6, 0);
+	mDeviceContext->IASetIndexBuffer(mIndexBuffer.Get(), DXGI_FORMAT_R32_UINT, 0);
+
+	mDeviceContext->DrawIndexed(6, 0, 0);
 
 	// Text
 	mSpriteBatch->Begin();
@@ -227,16 +229,18 @@ bool CGraphics::InitShaders()
 
 bool CGraphics::InitScene()
 {
-	TVertex v[] =
+	TVertex v[]
 	{
 		TVertex(-0.5f, -0.5f, 1.f, 0.0f, 1.0f),
 		TVertex(-0.5f, +0.5f, 1.f, 0.0f, 0.0f),
 		TVertex(+0.5f, +0.5f, 1.f, 1.0f, 0.0f),
-
-		TVertex(-0.5f, -0.5f, 1.f, 0.0f, 1.0f),
-		TVertex(+0.5f, +0.5f, 1.f, 1.0f, 0.0f),
 		TVertex(+0.5f, -0.5f, 1.f, 1.0f, 1.0f),
+	};
 
+	DWORD Indices[]
+	{
+		0, 1, 2,
+		0, 2, 3,
 	};
 
 	D3D11_BUFFER_DESC VertexBufferDescr;
@@ -254,6 +258,22 @@ bool CGraphics::InitScene()
 	HRESULT hr = mDevice->CreateBuffer(&VertexBufferDescr, &VertexBufferData, mVertexBuffer.GetAddressOf());
 	if (FAILED(hr)) {
 		CErrorLogger::Log(hr, "Failed to create vertex buffer.");
+		return false;
+	}
+
+	D3D11_BUFFER_DESC IndexBufferDesc;
+	ZeroMemory(&IndexBufferDesc, sizeof(D3D11_BUFFER_DESC));
+	IndexBufferDesc.Usage = D3D11_USAGE_DEFAULT;
+	IndexBufferDesc.ByteWidth = sizeof(DWORD) * ARRAYSIZE(Indices);
+	IndexBufferDesc.BindFlags = D3D11_BIND_INDEX_BUFFER;
+	IndexBufferDesc.CPUAccessFlags = 0;
+	IndexBufferDesc.MiscFlags = 0;
+
+	D3D11_SUBRESOURCE_DATA IndexBufferData;
+	IndexBufferData.pSysMem = Indices;
+	hr = mDevice->CreateBuffer(&IndexBufferDesc, &IndexBufferData, mIndexBuffer.GetAddressOf());
+	if (FAILED(hr)) {
+		CErrorLogger::Log(hr, "Failed to create index buffer.");
 		return false;
 	}
 

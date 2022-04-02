@@ -28,6 +28,7 @@ private:
 	CPixelShader mPixelShader;
 
 	Microsoft::WRL::ComPtr<ID3D11Buffer> mVertexBuffer;
+	Microsoft::WRL::ComPtr<ID3D11Buffer> mIndexBuffer;
 
 	Microsoft::WRL::ComPtr<ID3D11DepthStencilView> mDepthStencilView;
 	Microsoft::WRL::ComPtr<ID3D11Texture2D> mDepthStencilBuffer;
