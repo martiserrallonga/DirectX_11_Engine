@@ -7,6 +7,9 @@
 
 #include<WICTextureLoader.h>
 
+#include <CVertexBuffer.h>
+#include "TVertex.h"
+
 
 class CGraphics
 {
@@ -27,7 +30,7 @@ private:
 	CVertexShader mVertexShader;
 	CPixelShader mPixelShader;
 
-	Microsoft::WRL::ComPtr<ID3D11Buffer> mVertexBuffer;
+	CVertexBuffer<TVertex> mVertexBuffer;
 	Microsoft::WRL::ComPtr<ID3D11Buffer> mIndexBuffer;
 
 	Microsoft::WRL::ComPtr<ID3D11DepthStencilView> mDepthStencilView;

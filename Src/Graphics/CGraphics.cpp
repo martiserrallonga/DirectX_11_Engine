@@ -1,5 +1,4 @@
 #include "CGraphics.h"
-#include "TVertex.h"
 
 bool CGraphics::Init(HWND hwnd, int aWidth, int aHeight)
 {
@@ -28,12 +27,11 @@ void CGraphics::Render()
 	mDeviceContext->VSSetShader(mVertexShader.GetShader(), NULL, 0);
 	mDeviceContext->PSSetShader(mPixelShader.GetShader(), NULL, 0);
 
-	UINT Stride = sizeof(TVertex);
 	UINT Offset = 0;
 
 	// Square
 	mDeviceContext->PSSetShaderResources(0, 1, mTexture.GetAddressOf());
-	mDeviceContext->IASetVertexBuffers(0, 1, mVertexBuffer.GetAddressOf(), &Stride, &Offset);
+	mDeviceContext->IASetVertexBuffers(0, 1, mVertexBuffer.GetAddressOf(), mVertexBuffer.GetStridePtr(), &Offset);
 	mDeviceContext->IASetIndexBuffer(mIndexBuffer.Get(), DXGI_FORMAT_R32_UINT, 0);
 
 	mDeviceContext->DrawIndexed(6, 0, 0);
@@ -229,7 +227,7 @@ bool CGraphics::InitShaders()
 
 bool CGraphics::InitScene()
 {
-	TVertex v[]
+	TVertex Vertex []
 	{
 		TVertex(-0.5f, -0.5f, 1.f, 0.0f, 1.0f),
 		TVertex(-0.5f, +0.5f, 1.f, 0.0f, 0.0f),
@@ -243,19 +241,7 @@ bool CGraphics::InitScene()
 		0, 2, 3,
 	};
 
-	D3D11_BUFFER_DESC VertexBufferDescr;
-	ZeroMemory(&VertexBufferDescr, sizeof(D3D11_BUFFER_DESC));
-	VertexBufferDescr.Usage = D3D11_USAGE_DEFAULT;
-	VertexBufferDescr.ByteWidth = sizeof(TVertex) * ARRAYSIZE(v);
-	VertexBufferDescr.BindFlags = D3D11_BIND_VERTEX_BUFFER;
-	VertexBufferDescr.CPUAccessFlags = 0;
-	VertexBufferDescr.MiscFlags = 0;
-
-	D3D11_SUBRESOURCE_DATA VertexBufferData;
-	ZeroMemory(&VertexBufferData, sizeof(D3D11_SUBRESOURCE_DATA));
-	VertexBufferData.pSysMem = v;
-
-	HRESULT hr = mDevice->CreateBuffer(&VertexBufferDescr, &VertexBufferData, mVertexBuffer.GetAddressOf());
+	HRESULT hr = mVertexBuffer.Init(mDevice.Get(), Vertex, ARRAYSIZE(Vertex));
 	if (FAILED(hr)) {
 		CErrorLogger::Log(hr, "Failed to create vertex buffer.");
 		return false;
