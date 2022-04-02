@@ -5,11 +5,13 @@
 #include <SpriteBatch.h>
 #include <SpriteFont.h>
 
-#include<WICTextureLoader.h>
+#include <WICTextureLoader.h>
 
-#include <CVertexBuffer.h>
-#include <CIndexBuffer.h>
 #include "TVertex.h"
+#include "CVertexBuffer.h"
+#include "CIndexBuffer.h"
+
+#include "ConstantBufferTypes.h"
 
 
 class CGraphics
@@ -30,6 +32,7 @@ private:
 
 	CVertexShader mVertexShader;
 	CPixelShader mPixelShader;
+	Microsoft::WRL::ComPtr<ID3D11Buffer> mConstantBuffer;
 
 	CVertexBuffer<TVertex> mVertexBuffer;
 	CIndexBuffer mIndexBuffer;

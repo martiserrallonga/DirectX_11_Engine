@@ -29,6 +29,14 @@ void CGraphics::Render()
 
 	UINT Offset = 0;
 
+	// Update Constant Buffer
+	CB_VS_Offset Data{ 0.5f, -0.5f };
+	D3D11_MAPPED_SUBRESOURCE MappedResource;
+	HRESULT hr = mDeviceContext->Map(mConstantBuffer.Get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &MappedResource);
+	CopyMemory(MappedResource.pData, &Data, sizeof(CB_VS_Offset));
+	mDeviceContext->Unmap(mConstantBuffer.Get(), 0);
+	mDeviceContext->VSSetConstantBuffers(0, 1, mConstantBuffer.GetAddressOf());
+
 	// Square
 	mDeviceContext->PSSetShaderResources(0, 1, mTexture.GetAddressOf());
 	mDeviceContext->IASetVertexBuffers(0, 1, mVertexBuffer.GetAddressOf(), mVertexBuffer.GetStridePtr(), &Offset);
@@ -262,6 +270,24 @@ bool CGraphics::InitScene()
 	hr = DirectX::CreateWICTextureFromFile(mDevice.Get(), L"Data/Textures/car.jpg", nullptr, mTexture.GetAddressOf());
 	if (FAILED(hr)) {
 		CErrorLogger::Log(hr, "Failed to create wic texture from file.");
+		return false;
+	}
+
+	CD3D11_BUFFER_DESC BufferDesc;
+	ZeroMemory(&BufferDesc, sizeof(CD3D11_BUFFER_DESC));
+	UINT ByteSize = sizeof(CB_VS_Offset);
+	UINT DummyBytes = 16 - ByteSize % 16;
+
+	BufferDesc.Usage = D3D11_USAGE_DYNAMIC;
+	BufferDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+	BufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+	BufferDesc.MiscFlags = 0;
+	BufferDesc.ByteWidth = ByteSize + DummyBytes;
+	BufferDesc.StructureByteStride = 0;
+
+	hr = mDevice->CreateBuffer(&BufferDesc, 0, mConstantBuffer.GetAddressOf());
+	if (FAILED(hr)) {
+		CErrorLogger::Log(hr, "Failed to initialize constant buffer.");
 		return false;
 	}
 
