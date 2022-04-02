@@ -4,11 +4,11 @@
 struct TVertex
 {
 	TVertex() = default;
-	TVertex(float x, float y, float r, float g, float b)
-		: Position(x, y)
+	TVertex(float x, float y, float z, float r, float g, float b)
+		: Position(x, y, z)
 		, Color(r, g, b)
 	{}
 
-	DirectX::XMFLOAT2 Position;
+	DirectX::XMFLOAT3 Position;
 	DirectX::XMFLOAT3 Color;
 };
