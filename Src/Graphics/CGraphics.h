@@ -5,6 +5,9 @@
 #include <SpriteBatch.h>
 #include <SpriteFont.h>
 
+#include<WICTextureLoader.h>
+
+
 class CGraphics
 {
 public:
@@ -25,7 +28,6 @@ private:
 	CPixelShader mPixelShader;
 
 	Microsoft::WRL::ComPtr<ID3D11Buffer> mVertexBuffer;
-	Microsoft::WRL::ComPtr<ID3D11Buffer> mVertexBuffer2;
 
 	Microsoft::WRL::ComPtr<ID3D11DepthStencilView> mDepthStencilView;
 	Microsoft::WRL::ComPtr<ID3D11Texture2D> mDepthStencilBuffer;
@@ -35,5 +37,8 @@ private:
 	
 	std::unique_ptr<DirectX::SpriteBatch> mSpriteBatch;
 	std::unique_ptr<DirectX::SpriteFont> mSpriteFont;
+
+	Microsoft::WRL::ComPtr<ID3D11SamplerState> mSamplerState;
+	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> mTexture;
 
 };

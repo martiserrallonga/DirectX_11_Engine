@@ -23,17 +23,20 @@ void CGraphics::Render()
 	mDeviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY::D3D10_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 	mDeviceContext->RSSetState(mRasterizerState.Get());
 	mDeviceContext->OMSetDepthStencilState(mDepthStencilState.Get(), 0);
+	mDeviceContext->CSSetSamplers(0, 1, mSamplerState.GetAddressOf());
+
 	mDeviceContext->VSSetShader(mVertexShader.GetShader(), NULL, 0);
 	mDeviceContext->PSSetShader(mPixelShader.GetShader(), NULL, 0);
 
 	UINT Stride = sizeof(TVertex);
 	UINT Offset = 0;
+
+	// Square
+	mDeviceContext->PSSetShaderResources(0, 1, mTexture.GetAddressOf());
 	mDeviceContext->IASetVertexBuffers(0, 1, mVertexBuffer.GetAddressOf(), &Stride, &Offset);
-	mDeviceContext->Draw(3, 0);
+	mDeviceContext->Draw(6, 0);
 
-	mDeviceContext->IASetVertexBuffers(0, 1, mVertexBuffer2.GetAddressOf(), &Stride, &Offset);
-	mDeviceContext->Draw(3, 0);
-
+	// Text
 	mSpriteBatch->Begin();
 	mSpriteFont->DrawString(mSpriteBatch.get(), L"HELLO WORLD!",
 		DirectX::XMFLOAT2(0.f, 0.f), DirectX::Colors::White, 0.f,
@@ -169,6 +172,22 @@ bool CGraphics::InitDirectX(HWND hwnd, int aWidth, int aHeight)
 	mSpriteBatch = std::make_unique<DirectX::SpriteBatch>(mDeviceContext.Get());
 	mSpriteFont = std::make_unique<DirectX::SpriteFont>(mDevice.Get(), L"Data/Fonts/comic_sans_ms_16.spritefont");
 
+	D3D11_SAMPLER_DESC SamplerDesc;
+	ZeroMemory(&SamplerDesc, sizeof(D3D11_SAMPLER_DESC));
+	SamplerDesc.Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR;
+	SamplerDesc.AddressU = D3D11_TEXTURE_ADDRESS_WRAP;
+	SamplerDesc.AddressV = D3D11_TEXTURE_ADDRESS_WRAP;
+	SamplerDesc.AddressW = D3D11_TEXTURE_ADDRESS_WRAP;
+	SamplerDesc.ComparisonFunc = D3D11_COMPARISON_NEVER;
+	SamplerDesc.MinLOD = 0;
+	SamplerDesc.MaxLOD = D3D11_FLOAT32_MAX;
+	
+	hr = mDevice->CreateSamplerState(&SamplerDesc, mSamplerState.GetAddressOf());
+	if (FAILED(hr)) {
+		CErrorLogger::Log(hr, "Failed to create sampler state.");
+		return false;
+	}
+
 	return true;
 }
 
@@ -197,7 +216,7 @@ bool CGraphics::InitShaders()
 	auto ipvd = D3D11_INPUT_CLASSIFICATION::D3D11_INPUT_PER_VERTEX_DATA;
 	D3D11_INPUT_ELEMENT_DESC Layout[]{
 		{"POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, ipvd, 0 },
-		{"COLOR", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, ipvd, 0 },
+		{"TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, ipvd, 0 },
 	};
 	
 	if (!mVertexShader.Init(mDevice, ShaderFolder + L"VertexShader.cso", Layout, ARRAYSIZE(Layout))) return false;
@@ -210,9 +229,14 @@ bool CGraphics::InitScene()
 {
 	TVertex v[] =
 	{
-		TVertex(+0.0f, +0.5f, 1.f, 1.f, 0.f, 0.f),
-		TVertex(+0.5f, -0.5f, 1.f, 1.f, 0.f, 0.f),
-		TVertex(-0.5f, -0.5f, 1.f, 1.f, 0.f, 0.f),
+		TVertex(-0.5f, -0.5f, 1.f, 0.0f, 1.0f),
+		TVertex(-0.5f, +0.5f, 1.f, 0.0f, 0.0f),
+		TVertex(+0.5f, +0.5f, 1.f, 1.0f, 0.0f),
+
+		TVertex(-0.5f, -0.5f, 1.f, 0.0f, 1.0f),
+		TVertex(+0.5f, +0.5f, 1.f, 1.0f, 0.0f),
+		TVertex(+0.5f, -0.5f, 1.f, 1.0f, 1.0f),
+
 	};
 
 	D3D11_BUFFER_DESC VertexBufferDescr;
@@ -233,27 +257,15 @@ bool CGraphics::InitScene()
 		return false;
 	}
 
-	// 2nd triangle GREEN
-	TVertex v2[] =
-	{
-		TVertex(-0.25f, -0.25f, 0.f, 0.f, 1.f, 0.f),
-		TVertex(+0.00f, +0.25f, 0.f, 0.f, 1.f, 0.f),
-		TVertex(+0.25f, -0.25f, 0.f, 0.f, 1.f, 0.f),
-	};
-
-	ZeroMemory(&VertexBufferDescr, sizeof(D3D11_BUFFER_DESC));
-	VertexBufferDescr.Usage = D3D11_USAGE_DEFAULT;
-	VertexBufferDescr.ByteWidth = sizeof(TVertex) * ARRAYSIZE(v2);
-	VertexBufferDescr.BindFlags = D3D11_BIND_VERTEX_BUFFER;
-	VertexBufferDescr.CPUAccessFlags = 0;
-	VertexBufferDescr.MiscFlags = 0;
-
-	ZeroMemory(&VertexBufferData, sizeof(D3D11_SUBRESOURCE_DATA));
-	VertexBufferData.pSysMem = v2;
-
-	hr = mDevice->CreateBuffer(&VertexBufferDescr, &VertexBufferData, mVertexBuffer2.GetAddressOf());
+	hr = CoInitialize(NULL);
 	if (FAILED(hr)) {
-		CErrorLogger::Log(hr, "Failed to create vertex buffer.");
+		CErrorLogger::Log(hr, "Failed to call CoInitialize.");
+		return false;
+	}
+
+	hr = DirectX::CreateWICTextureFromFile(mDevice.Get(), L"Data/Textures/car.jpg", nullptr, mTexture.GetAddressOf());
+	if (FAILED(hr)) {
+		CErrorLogger::Log(hr, "Failed to create wic texture from file.");
 		return false;
 	}
 
