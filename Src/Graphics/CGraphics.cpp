@@ -34,7 +34,7 @@ void CGraphics::Render()
 	mDeviceContext->IASetVertexBuffers(0, 1, mVertexBuffer.GetAddressOf(), mVertexBuffer.GetStridePtr(), &Offset);
 	mDeviceContext->IASetIndexBuffer(mIndexBuffer.Get(), DXGI_FORMAT_R32_UINT, 0);
 
-	mDeviceContext->DrawIndexed(6, 0, 0);
+	mDeviceContext->DrawIndexed(mIndexBuffer.GetBufferSize(), 0, 0);
 
 	// Text
 	mSpriteBatch->Begin();
@@ -235,29 +235,19 @@ bool CGraphics::InitScene()
 		TVertex(+0.5f, -0.5f, 1.f, 1.0f, 1.0f),
 	};
 
-	DWORD Indices[]
-	{
-		0, 1, 2,
-		0, 2, 3,
-	};
-
 	HRESULT hr = mVertexBuffer.Init(mDevice.Get(), Vertex, ARRAYSIZE(Vertex));
 	if (FAILED(hr)) {
 		CErrorLogger::Log(hr, "Failed to create vertex buffer.");
 		return false;
 	}
 
-	D3D11_BUFFER_DESC IndexBufferDesc;
-	ZeroMemory(&IndexBufferDesc, sizeof(D3D11_BUFFER_DESC));
-	IndexBufferDesc.Usage = D3D11_USAGE_DEFAULT;
-	IndexBufferDesc.ByteWidth = sizeof(DWORD) * ARRAYSIZE(Indices);
-	IndexBufferDesc.BindFlags = D3D11_BIND_INDEX_BUFFER;
-	IndexBufferDesc.CPUAccessFlags = 0;
-	IndexBufferDesc.MiscFlags = 0;
+	DWORD Index[]
+	{
+		0, 1, 2,
+		0, 2, 3,
+	};
 
-	D3D11_SUBRESOURCE_DATA IndexBufferData;
-	IndexBufferData.pSysMem = Indices;
-	hr = mDevice->CreateBuffer(&IndexBufferDesc, &IndexBufferData, mIndexBuffer.GetAddressOf());
+	hr = mIndexBuffer.Init(mDevice.Get(), Index, ARRAYSIZE(Index));
 	if (FAILED(hr)) {
 		CErrorLogger::Log(hr, "Failed to create index buffer.");
 		return false;

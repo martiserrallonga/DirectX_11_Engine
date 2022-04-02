@@ -34,6 +34,7 @@
     <ClCompile Include="Src\Source.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Src\Graphics\CIndexBuffer.h" />
     <ClInclude Include="Src\Graphics\CVertexBuffer.h" />
     <ClInclude Include="Src\CEngine.h" />
     <ClInclude Include="Src\CErrorLogger.h" />
