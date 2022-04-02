@@ -122,6 +122,9 @@
     <ClInclude Include="Src\Graphics\ConstantBufferTypes.h">
       <Filter>Header Files\Graphics</Filter>
     </ClInclude>
+    <ClInclude Include="Src\Graphics\CConstantBuffer.h">
+      <Filter>Header Files\Graphics</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="VertexShader.hlsl">

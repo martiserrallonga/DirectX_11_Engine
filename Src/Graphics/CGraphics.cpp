@@ -30,11 +30,13 @@ void CGraphics::Render()
 	UINT Offset = 0;
 
 	// Update Constant Buffer
-	CB_VS_Offset Data{ 0.5f, -0.5f };
-	D3D11_MAPPED_SUBRESOURCE MappedResource;
-	HRESULT hr = mDeviceContext->Map(mConstantBuffer.Get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &MappedResource);
-	CopyMemory(MappedResource.pData, &Data, sizeof(CB_VS_Offset));
-	mDeviceContext->Unmap(mConstantBuffer.Get(), 0);
+	
+	static int pos = 0;
+	pos+=3;
+	float xOffset = (pos % 3000 - 1500) / 1000.f;
+	mConstantBuffer.mData = { xOffset, 0.f };
+	mConstantBuffer.Update();
+
 	mDeviceContext->VSSetConstantBuffers(0, 1, mConstantBuffer.GetAddressOf());
 
 	// Square
@@ -157,8 +159,8 @@ bool CGraphics::InitDirectX(HWND hwnd, int aWidth, int aHeight)
 
 	Viewport.TopLeftX = 0;
 	Viewport.TopLeftY = 0;
-	Viewport.Width = aWidth;
-	Viewport.Height = aHeight;
+	Viewport.Width = static_cast<float>(aWidth);
+	Viewport.Height = static_cast<float>(aHeight);
 	Viewport.MinDepth = 0.f;
 	Viewport.MaxDepth = 1.f;
 
@@ -273,19 +275,7 @@ bool CGraphics::InitScene()
 		return false;
 	}
 
-	CD3D11_BUFFER_DESC BufferDesc;
-	ZeroMemory(&BufferDesc, sizeof(CD3D11_BUFFER_DESC));
-	UINT ByteSize = sizeof(CB_VS_Offset);
-	UINT DummyBytes = 16 - ByteSize % 16;
-
-	BufferDesc.Usage = D3D11_USAGE_DYNAMIC;
-	BufferDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
-	BufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
-	BufferDesc.MiscFlags = 0;
-	BufferDesc.ByteWidth = ByteSize + DummyBytes;
-	BufferDesc.StructureByteStride = 0;
-
-	hr = mDevice->CreateBuffer(&BufferDesc, 0, mConstantBuffer.GetAddressOf());
+	hr = mConstantBuffer.Init(mDevice.Get(), mDeviceContext.Get());
 	if (FAILED(hr)) {
 		CErrorLogger::Log(hr, "Failed to initialize constant buffer.");
 		return false;

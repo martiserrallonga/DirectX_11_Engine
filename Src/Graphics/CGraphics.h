@@ -11,7 +11,7 @@
 #include "CVertexBuffer.h"
 #include "CIndexBuffer.h"
 
-#include "ConstantBufferTypes.h"
+#include "CConstantBuffer.h"
 
 
 class CGraphics
@@ -32,7 +32,7 @@ private:
 
 	CVertexShader mVertexShader;
 	CPixelShader mPixelShader;
-	Microsoft::WRL::ComPtr<ID3D11Buffer> mConstantBuffer;
+	CConstantBuffer<CB_VS_Offset> mConstantBuffer;
 
 	CVertexBuffer<TVertex> mVertexBuffer;
 	CIndexBuffer mIndexBuffer;
