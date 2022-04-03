@@ -2,7 +2,10 @@
 
 bool CGraphics::Init(HWND hwnd, int aWidth, int aHeight)
 {
-	if (!InitDirectX(hwnd, aWidth, aHeight)) return false;
+	mWindowWidth = aWidth;
+	mWindowHeight = aHeight;
+
+	if (!InitDirectX(hwnd)) return false;
 	if (!InitShaders()) return false;
 	if (!InitScene()) return false;
 
@@ -29,17 +32,26 @@ void CGraphics::Render()
 
 	UINT Offset = 0;
 
-	static float angle = 0;
-	angle += DirectX::XM_2PI / 2000.f;
-
 	// Update Constant Buffer
-	DirectX::XMMATRIX Trans = DirectX::XMMatrixIdentity();
-	Trans = DirectX::XMMatrixScaling(640.f/360.f, 1.f, 1.f);
-	Trans *= DirectX::XMMatrixRotationRollPitchYaw(0.f, 0.f, angle);
-	Trans *= DirectX::XMMatrixTranslation(0.f, 0.3f, 0.f);
-	Trans = DirectX::XMMatrixTranspose(Trans);
+	DirectX::XMMATRIX World = DirectX::XMMatrixIdentity();
+	
+	static DirectX::XMVECTOR Eye = DirectX::XMVectorSet(0.f, -4.f, -2.f, 0.f);
+	DirectX::XMFLOAT3 EyePos;
+	DirectX::XMStoreFloat3(&EyePos, Eye);
+	EyePos.y += 0.01f;
+	Eye = DirectX::XMLoadFloat3(&EyePos);
 
-	mConstantBuffer.mData.Transform = Trans;
+	static DirectX::XMVECTOR LookAt = DirectX::XMVectorSet(0.f, 0.f, 0.f, 0.f);
+	static DirectX::XMVECTOR UpVector = DirectX::XMVectorSet(0.f, 1.f, 0.f, 0.f);
+	DirectX::XMMATRIX View = DirectX::XMMatrixLookAtLH(Eye, LookAt, UpVector);
+
+	float Fov = DirectX::XM_PIDIV2;
+	float AspectRatio = static_cast<float>(mWindowWidth) / static_cast<float>(mWindowHeight);
+	float NearZ = 0.1f;
+	float FarZ = 1000.f;
+	DirectX::XMMATRIX Projection = DirectX::XMMatrixPerspectiveFovLH(Fov, AspectRatio, NearZ, FarZ);
+
+	mConstantBuffer.mData.Transform = World * View * Projection;
 	mConstantBuffer.Update();
 
 	mDeviceContext->VSSetConstantBuffers(0, 1, mConstantBuffer.GetAddressOf());
@@ -61,7 +73,7 @@ void CGraphics::Render()
 	mSwapChain->Present(1, NULL);
 }
 
-bool CGraphics::InitDirectX(HWND hwnd, int aWidth, int aHeight)
+bool CGraphics::InitDirectX(HWND hwnd)
 {
 	std::vector<TAdapter> Adapters = CAdapterReader::GetAdapters();
 	if (Adapters.empty()) {
@@ -71,8 +83,8 @@ bool CGraphics::InitDirectX(HWND hwnd, int aWidth, int aHeight)
 
 	DXGI_SWAP_CHAIN_DESC Scd;
 	ZeroMemory(&Scd, sizeof(DXGI_SWAP_CHAIN_DESC));
-	Scd.BufferDesc.Width = aWidth;
-	Scd.BufferDesc.Height = aHeight;
+	Scd.BufferDesc.Width = mWindowWidth;
+	Scd.BufferDesc.Height = mWindowHeight;
 	Scd.BufferDesc.RefreshRate.Numerator = 60;
 	Scd.BufferDesc.RefreshRate.Denominator = 1;
 	Scd.BufferDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
@@ -121,8 +133,8 @@ bool CGraphics::InitDirectX(HWND hwnd, int aWidth, int aHeight)
 	}
 
 	D3D11_TEXTURE2D_DESC DepthStencilBufferDesc;
-	DepthStencilBufferDesc.Width = aWidth;
-	DepthStencilBufferDesc.Height = aHeight;
+	DepthStencilBufferDesc.Width = mWindowWidth;
+	DepthStencilBufferDesc.Height = mWindowHeight;
 	DepthStencilBufferDesc.MipLevels = 1;
 	DepthStencilBufferDesc.ArraySize = 1;
 	DepthStencilBufferDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
@@ -164,8 +176,8 @@ bool CGraphics::InitDirectX(HWND hwnd, int aWidth, int aHeight)
 
 	Viewport.TopLeftX = 0;
 	Viewport.TopLeftY = 0;
-	Viewport.Width = static_cast<float>(aWidth);
-	Viewport.Height = static_cast<float>(aHeight);
+	Viewport.Width = static_cast<float>(mWindowWidth);
+	Viewport.Height = static_cast<float>(mWindowHeight);
 	Viewport.MinDepth = 0.f;
 	Viewport.MaxDepth = 1.f;
 
@@ -244,10 +256,10 @@ bool CGraphics::InitScene()
 {
 	TVertex Vertex []
 	{
-		TVertex(-0.5f, -0.5f, 1.f, 0.0f, 1.0f),
-		TVertex(-0.5f, +0.5f, 1.f, 0.0f, 0.0f),
-		TVertex(+0.5f, +0.5f, 1.f, 1.0f, 0.0f),
-		TVertex(+0.5f, -0.5f, 1.f, 1.0f, 1.0f),
+		TVertex(-0.5f, -0.5f, 0.f, 0.0f, 1.0f),
+		TVertex(-0.5f, +0.5f, 0.f, 0.0f, 0.0f),
+		TVertex(+0.5f, +0.5f, 0.f, 1.0f, 0.0f),
+		TVertex(+0.5f, -0.5f, 0.f, 1.0f, 1.0f),
 	};
 
 	HRESULT hr = mVertexBuffer.Init(mDevice.Get(), Vertex, ARRAYSIZE(Vertex));
