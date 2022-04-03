@@ -1,6 +1,6 @@
 cbuffer CBUFFER : register(b0)
 {
-    float2 Offset;
+    float4x4 Transform;
 };
 
 struct VS_INPUT
@@ -18,8 +18,7 @@ struct VS_OUTPUT
 VS_OUTPUT main(VS_INPUT input)
 {
     VS_OUTPUT output;
-    input.Pos += float3(Offset, 0.f);
-    output.Pos = float4(input.Pos, 1.f);
+    output.Pos = mul(float4(input.Pos, 1.f), Transform);
     output.TexCoord = input.TexCoord;
     return output;
 }

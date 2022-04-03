@@ -29,12 +29,17 @@ void CGraphics::Render()
 
 	UINT Offset = 0;
 
+	static float angle = 0;
+	angle += DirectX::XM_2PI / 2000.f;
+
 	// Update Constant Buffer
-	
-	static int pos = 0;
-	pos+=3;
-	float xOffset = (pos % 3000 - 1500) / 1000.f;
-	mConstantBuffer.mData = { xOffset, 0.f };
+	DirectX::XMMATRIX Trans = DirectX::XMMatrixIdentity();
+	Trans = DirectX::XMMatrixScaling(640.f/360.f, 1.f, 1.f);
+	Trans *= DirectX::XMMatrixRotationRollPitchYaw(0.f, 0.f, angle);
+	Trans *= DirectX::XMMatrixTranslation(0.f, 0.3f, 0.f);
+	Trans = DirectX::XMMatrixTranspose(Trans);
+
+	mConstantBuffer.mData.Transform = Trans;
 	mConstantBuffer.Update();
 
 	mDeviceContext->VSSetConstantBuffers(0, 1, mConstantBuffer.GetAddressOf());
