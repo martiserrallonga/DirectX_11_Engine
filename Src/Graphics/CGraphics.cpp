@@ -33,25 +33,11 @@ void CGraphics::Render()
 	UINT Offset = 0;
 
 	// Update Constant Buffer
-	DirectX::XMMATRIX World = DirectX::XMMatrixIdentity();
+	XMMATRIX World = XMMatrixIdentity();
+	Camera.AddPosition(0.f, 0.01f, 0.f);
 	
-	static DirectX::XMVECTOR Eye = DirectX::XMVectorSet(0.f, -4.f, -2.f, 0.f);
-	DirectX::XMFLOAT3 EyePos;
-	DirectX::XMStoreFloat3(&EyePos, Eye);
-	EyePos.y += 0.01f;
-	Eye = DirectX::XMLoadFloat3(&EyePos);
-
-	static DirectX::XMVECTOR LookAt = DirectX::XMVectorSet(0.f, 0.f, 0.f, 0.f);
-	static DirectX::XMVECTOR UpVector = DirectX::XMVectorSet(0.f, 1.f, 0.f, 0.f);
-	DirectX::XMMATRIX View = DirectX::XMMatrixLookAtLH(Eye, LookAt, UpVector);
-
-	float Fov = DirectX::XM_PIDIV2;
-	float AspectRatio = static_cast<float>(mWindowWidth) / static_cast<float>(mWindowHeight);
-	float NearZ = 0.1f;
-	float FarZ = 1000.f;
-	DirectX::XMMATRIX Projection = DirectX::XMMatrixPerspectiveFovLH(Fov, AspectRatio, NearZ, FarZ);
-
-	mConstantBuffer.mData.Transform = World * View * Projection;
+	XMMATRIX WVP = World * Camera.GetViewMatrix() * Camera.GetProjectionMatrix();
+	mConstantBuffer.mData.Transform = XMMatrixTranspose(WVP);
 	mConstantBuffer.Update();
 
 	mDeviceContext->VSSetConstantBuffers(0, 1, mConstantBuffer.GetAddressOf());
@@ -297,6 +283,14 @@ bool CGraphics::InitScene()
 		CErrorLogger::Log(hr, "Failed to initialize constant buffer.");
 		return false;
 	}
+
+	Camera.SetPosition(0.f, 0.f, -2.f);
+
+	float Fov = 90.f;
+	float AspectRatio = static_cast<float>(mWindowWidth) / static_cast<float>(mWindowHeight);
+	float NearZ = 0.1f;
+	float FarZ = 1000.f;
+	Camera.SetProjectionValues(Fov, AspectRatio, NearZ, FarZ);
 
 	return true;
 }

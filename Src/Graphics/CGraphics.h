@@ -13,6 +13,7 @@
 
 #include "CConstantBuffer.h"
 
+#include "CCamera.h"
 
 class CGraphics
 {
@@ -51,5 +52,7 @@ private:
 
 	Microsoft::WRL::ComPtr<ID3D11SamplerState> mSamplerState;
 	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> mTexture;
+
+	CCamera Camera;
 
 };

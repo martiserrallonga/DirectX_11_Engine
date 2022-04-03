@@ -25,6 +25,7 @@
     <ClCompile Include="Src\CStringConverter.cpp" />
     <ClCompile Include="Src\CWindowContainer.cpp" />
     <ClCompile Include="Src\Graphics\CAdapterReader.cpp" />
+    <ClCompile Include="Src\Graphics\CCamera.cpp" />
     <ClCompile Include="Src\Graphics\CGraphics.cpp" />
     <ClCompile Include="Src\Graphics\Shaders.cpp" />
     <ClCompile Include="Src\Keyboard\CKeyboard.cpp" />
@@ -34,17 +35,18 @@
     <ClCompile Include="Src\Source.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Src\Graphics\CConstantBuffer.h" />
-    <ClInclude Include="Src\Graphics\ConstantBufferTypes.h" />
-    <ClInclude Include="Src\Graphics\CIndexBuffer.h" />
-    <ClInclude Include="Src\Graphics\CVertexBuffer.h" />
     <ClInclude Include="Src\CEngine.h" />
     <ClInclude Include="Src\CErrorLogger.h" />
     <ClInclude Include="Src\CRenderWindow.h" />
     <ClInclude Include="Src\CStringConverter.h" />
     <ClInclude Include="Src\CWindowContainer.h" />
     <ClInclude Include="Src\Graphics\CAdapterReader.h" />
+    <ClInclude Include="Src\Graphics\CCamera.h" />
+    <ClInclude Include="Src\Graphics\CConstantBuffer.h" />
     <ClInclude Include="Src\Graphics\CGraphics.h" />
+    <ClInclude Include="Src\Graphics\CIndexBuffer.h" />
+    <ClInclude Include="Src\Graphics\ConstantBufferTypes.h" />
+    <ClInclude Include="Src\Graphics\CVertexBuffer.h" />
     <ClInclude Include="Src\Graphics\Shaders.h" />
     <ClInclude Include="Src\Graphics\TVertex.h" />
     <ClInclude Include="Src\Keyboard\CKeyboard.h" />
