@@ -28,6 +28,8 @@ public:
 	void AddRotation(const XMVECTOR& rot);
 	void AddRotation(float x, float y, float z);
 
+	void LookAt(XMFLOAT3 pos);
+
 private:
 	void UpdateViewMatrix();
 	XMMATRIX mView;

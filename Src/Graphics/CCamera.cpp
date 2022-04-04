@@ -72,6 +72,21 @@ void CCamera::AddRotation(float x, float y, float z)
 	UpdateViewMatrix();
 }
 
+void CCamera::LookAt(XMFLOAT3 pos)
+{
+	if (XMVector3Equal(mVPos, XMLoadFloat3(&pos))) return;
+
+	pos.x -= mPos.x;
+	pos.y -= mPos.y;
+	pos.z -= mPos.z;
+
+	float Distance = XMVectorGetX(XMVector2Length({ pos.x, pos.z }));
+	float Pitch2 = atan2(pos.y, Distance);
+	float Yaw2 = atan2(pos.x, pos.z);
+
+	SetRotation(Pitch2, Yaw2, 0.f);
+}
+
 void CCamera::UpdateViewMatrix() //Updates view matrix and also updates the movement vectors
 {
 	//Calculate camera rotation matrix
