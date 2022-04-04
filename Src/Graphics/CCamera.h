@@ -30,6 +30,9 @@ public:
 
 	void LookAt(XMFLOAT3 pos);
 
+	const XMVECTOR& GetForward() { return mForward; }
+	const XMVECTOR& GetRight() { return mRight; }
+
 private:
 	void UpdateViewMatrix();
 	XMMATRIX mView;
@@ -39,7 +42,11 @@ private:
 	XMFLOAT3 mPos;
 	XMFLOAT3 mRot;
 
-	static const XMVECTOR DEFAULT_FORWARD_VECTOR;
-	static const XMVECTOR DEFAULT_UP_VECTOR;
+	XMVECTOR mForward;
+	XMVECTOR mRight;
+
+	static const XMVECTOR DEFAULT_RIGHT;
+	static const XMVECTOR DEFAULT_UP;
+	static const XMVECTOR DEFAULT_FORWARD;
 
 };

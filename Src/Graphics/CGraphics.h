@@ -21,6 +21,8 @@ public:
 	bool Init(HWND hwnd, int aWidth, int aHeight);
 	void Render();
 
+	CCamera Camera;
+
 private:
 	bool InitDirectX(HWND hwnd);
 	bool InitShaders();
@@ -52,7 +54,5 @@ private:
 
 	Microsoft::WRL::ComPtr<ID3D11SamplerState> mSamplerState;
 	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> mTexture;
-
-	CCamera Camera;
 
 };

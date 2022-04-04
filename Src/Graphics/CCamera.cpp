@@ -1,7 +1,8 @@
 #include "CCamera.h"
 
-const XMVECTOR CCamera::DEFAULT_FORWARD_VECTOR = XMVectorSet(0.0f, 0.0f, 1.0f, 0.0f);
-const XMVECTOR CCamera::DEFAULT_UP_VECTOR = XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f);
+const XMVECTOR CCamera::DEFAULT_RIGHT = XMVectorSet(1.0f, 0.0f, 0.0f, 0.0f);
+const XMVECTOR CCamera::DEFAULT_UP = XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f);
+const XMVECTOR CCamera::DEFAULT_FORWARD = XMVectorSet(0.0f, 0.0f, 1.0f, 0.0f);
 
 CCamera::CCamera()
 	: mPos(0.f, 0.f, 0.f)
@@ -92,11 +93,16 @@ void CCamera::UpdateViewMatrix() //Updates view matrix and also updates the move
 	//Calculate camera rotation matrix
 	XMMATRIX camRotationMatrix = XMMatrixRotationRollPitchYaw(mRot.x, mRot.y, mRot.z);
 	//Calculate unit vector of cam target based off camera forward value transformed by cam rotation matrix
-	XMVECTOR camTarget = XMVector3TransformCoord(DEFAULT_FORWARD_VECTOR, camRotationMatrix);
+	XMVECTOR camTarget = XMVector3TransformCoord(DEFAULT_FORWARD, camRotationMatrix);
 	//Adjust cam target to be offset by the camera's current position
 	camTarget += mVPos;
 	//Calculate up direction based on current rotation
-	XMVECTOR upDir = XMVector3TransformCoord(DEFAULT_UP_VECTOR, camRotationMatrix);
+	XMVECTOR upDir = XMVector3TransformCoord(DEFAULT_UP, camRotationMatrix);
 	//Rebuild view matrix
 	mView = XMMatrixLookAtLH(mVPos, camTarget, upDir);
+
+	XMMATRIX YawRotationMatrix = XMMatrixRotationRollPitchYaw(0.f, mRot.y, 0.f);
+	mForward = XMVector3TransformCoord(DEFAULT_FORWARD, YawRotationMatrix);
+	mRight = XMVector3TransformCoord(DEFAULT_RIGHT, YawRotationMatrix);
+
 }

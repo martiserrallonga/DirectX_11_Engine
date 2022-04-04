@@ -34,9 +34,6 @@ void CGraphics::Render()
 
 	// Update Constant Buffer
 	XMMATRIX World = XMMatrixIdentity();
-	Camera.AddPosition(0.01f, 0.00f, 0.f);
-	Camera.LookAt({ 0.f, 0.f, 0.f });
-
 	XMMATRIX WVP = World * Camera.GetViewMatrix() * Camera.GetProjectionMatrix();
 	mConstantBuffer.mData.Transform = XMMatrixTranspose(WVP);
 	mConstantBuffer.Update();

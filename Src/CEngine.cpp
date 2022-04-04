@@ -38,27 +38,39 @@ void CEngine::Update()
 		OutputDebugStringA(msg.c_str());
 	}
 
+
+	CCamera& Camera = Graphics.Camera;
+	const float CameraSpeed = 0.01f;
+
 	while (!Mouse.IsEventBufferEmpty()) {
 		CMouseEvent Event = Mouse.ReadEvent();
-		auto pos = Event.GetPos();
-		std::string msg = "Mouse: [";
-		msg += std::to_string(pos.x);
-		msg += ' ';
-		msg += std::to_string(pos.y);
-		msg += "]";
+		if (Mouse.IsRightPressed()
+			&& Event.GetType() == CMouseEvent::EEventType::RawMove)
+		{
+			auto pos = Event.GetPos();
+			float pitch = static_cast<float>(pos.y) * DirectX::XM_PI / 180.f;
+			float yaw = static_cast<float>(pos.x) * DirectX::XM_PI / 180.f;
+			Camera.AddRotation({ pitch, yaw, 0.f });
+		}
+	}
 
-		if (Event.GetType() == CMouseEvent::EEventType::RawMove) msg += " Raw";
-		if (Event.GetType() == CMouseEvent::EEventType::RPress) msg += " RPress";
-		if (Event.GetType() == CMouseEvent::EEventType::RRelease) msg += " RRelease";
-		if (Event.GetType() == CMouseEvent::EEventType::LPress) msg += " LPress";
-		if (Event.GetType() == CMouseEvent::EEventType::LRelease) msg += " LRelease";
-		if (Event.GetType() == CMouseEvent::EEventType::MPress) msg += " MPress";
-		if (Event.GetType() == CMouseEvent::EEventType::MRelease) msg += " MRelease";
-		if (Event.GetType() == CMouseEvent::EEventType::WheelUp) msg += " WheelUp";
-		if (Event.GetType() == CMouseEvent::EEventType::WheelDown) msg += " WheelDown";
-
-		msg += '\n';
-		OutputDebugStringA(msg.c_str());
+	if (Keyboard.IsKeyPressed('W')) {
+		Camera.AddPosition(+Camera.GetForward() * CameraSpeed);
+	}
+	if (Keyboard.IsKeyPressed('S')) {
+		Camera.AddPosition(-Camera.GetForward() * CameraSpeed);
+	}
+	if (Keyboard.IsKeyPressed('A')) {
+		Camera.AddPosition(-Camera.GetRight() * CameraSpeed);
+	}
+	if (Keyboard.IsKeyPressed('D')) {
+		Camera.AddPosition(+Camera.GetRight() * CameraSpeed);
+	}
+	if (Keyboard.IsKeyPressed(VK_SPACE)) {
+		Camera.AddPosition({ 0.f, +CameraSpeed, 0.f });
+	}
+	if (Keyboard.IsKeyPressed(VK_SHIFT)) {
+		Camera.AddPosition({ 0.f, -CameraSpeed, 0.f });
 	}
 
 }
