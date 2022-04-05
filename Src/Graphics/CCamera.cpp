@@ -82,8 +82,8 @@ void CCamera::LookAt(XMFLOAT3 pos)
 	pos.z -= mPos.z;
 
 	float Distance = XMVectorGetX(XMVector2Length({ pos.x, pos.z }));
-	float Pitch2 = atan2(pos.y, Distance);
-	float Yaw2 = atan2(pos.x, pos.z);
+	float Pitch2 = atan2f(pos.y, Distance);
+	float Yaw2 = atan2f(pos.x, pos.z);
 
 	SetRotation(Pitch2, Yaw2, 0.f);
 }

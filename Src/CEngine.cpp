@@ -17,7 +17,7 @@ bool CEngine::ProcessMessages()
 
 void CEngine::Update()
 {
-	float dt = Timer.GetMiliseconds();
+	float dt = static_cast<float>(Timer.GetMiliseconds());
 	Timer.Restart();
 
 	while (!Keyboard.IsCharBufferEmpty()) {
