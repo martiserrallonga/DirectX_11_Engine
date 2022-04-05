@@ -23,8 +23,11 @@ CWindowContainer::CWindowContainer()
 	RawInputInitialized = true;
 }
 
+extern LRESULT ImGui_ImplWin32_WndProcHandler(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 LRESULT CWindowContainer::WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
+	if (ImGui_ImplWin32_WndProcHandler(hwnd, uMsg, wParam, lParam)) return true;
+
 	switch (uMsg)
 	{
 	// Keyboard Messages

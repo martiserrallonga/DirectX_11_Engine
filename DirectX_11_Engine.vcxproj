@@ -29,6 +29,12 @@
     <ClCompile Include="Src\Graphics\CCamera.cpp" />
     <ClCompile Include="Src\Graphics\CGraphics.cpp" />
     <ClCompile Include="Src\Graphics\Shaders.cpp" />
+    <ClCompile Include="Src\ImGui\imgui.cpp" />
+    <ClCompile Include="Src\ImGui\imgui_draw.cpp" />
+    <ClCompile Include="Src\ImGui\imgui_impl_dx11.cpp" />
+    <ClCompile Include="Src\ImGui\imgui_impl_win32.cpp" />
+    <ClCompile Include="Src\ImGui\imgui_tables.cpp" />
+    <ClCompile Include="Src\ImGui\imgui_widgets.cpp" />
     <ClCompile Include="Src\Keyboard\CKeyboard.cpp" />
     <ClCompile Include="Src\Keyboard\CKeyboardEvent.cpp" />
     <ClCompile Include="Src\Mouse\CMouse.cpp" />
@@ -36,11 +42,11 @@
     <ClCompile Include="Src\Source.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Src\CTimer.h" />
     <ClInclude Include="Src\CEngine.h" />
     <ClInclude Include="Src\CErrorLogger.h" />
     <ClInclude Include="Src\CRenderWindow.h" />
     <ClInclude Include="Src\CStringConverter.h" />
+    <ClInclude Include="Src\CTimer.h" />
     <ClInclude Include="Src\CWindowContainer.h" />
     <ClInclude Include="Src\Graphics\CAdapterReader.h" />
     <ClInclude Include="Src\Graphics\CCamera.h" />
@@ -51,6 +57,14 @@
     <ClInclude Include="Src\Graphics\CVertexBuffer.h" />
     <ClInclude Include="Src\Graphics\Shaders.h" />
     <ClInclude Include="Src\Graphics\TVertex.h" />
+    <ClInclude Include="Src\ImGui\imconfig.h" />
+    <ClInclude Include="Src\ImGui\imgui.h" />
+    <ClInclude Include="Src\ImGui\imgui_impl_dx11.h" />
+    <ClInclude Include="Src\ImGui\imgui_impl_win32.h" />
+    <ClInclude Include="Src\ImGui\imgui_internal.h" />
+    <ClInclude Include="Src\ImGui\imstb_rectpack.h" />
+    <ClInclude Include="Src\ImGui\imstb_textedit.h" />
+    <ClInclude Include="Src\ImGui\imstb_truetype.h" />
     <ClInclude Include="Src\Keyboard\CKeyboard.h" />
     <ClInclude Include="Src\Keyboard\CKeyboardEvent.h" />
     <ClInclude Include="Src\Mouse\CMouse.h" />
@@ -132,28 +146,28 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>$(SolutionDir)Includes;$(SolutionDir)Src;$(SolutionDir)Src\Keyboard;$(SolutionDir)Src\Mouse;$(SolutionDir)Src\Graphics</IncludePath>
+    <IncludePath>$(SolutionDir)Includes;$(SolutionDir)Src;$(SolutionDir)Src\Keyboard;$(SolutionDir)Src\Mouse;$(SolutionDir)Src\Graphics;$(SolutionDir)Src\ImGui</IncludePath>
     <LibraryPath>$(SolutionDir)Libs\$(Platform)\$(Configuration)\;$(LibraryPath)</LibraryPath>
     <OutDir>$(SolutionDir)Build\$(Platform)\$(Configuration)\</OutDir>
     <IntDir>Build\$(Platform)\$(Configuration)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>$(SolutionDir)Includes;$(SolutionDir)Src;$(SolutionDir)Src\Keyboard;$(SolutionDir)Src\Mouse;$(SolutionDir)Src\Graphics</IncludePath>
+    <IncludePath>$(SolutionDir)Includes;$(SolutionDir)Src;$(SolutionDir)Src\Keyboard;$(SolutionDir)Src\Mouse;$(SolutionDir)Src\Graphics;$(SolutionDir)Src\ImGui</IncludePath>
     <LibraryPath>$(SolutionDir)Libs\$(Platform)\$(Configuration)\;$(LibraryPath)</LibraryPath>
     <OutDir>$(SolutionDir)Build\$(Platform)\$(Configuration)\</OutDir>
     <IntDir>Build\$(Platform)\$(Configuration)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>$(SolutionDir)Includes;$(SolutionDir)Src;$(SolutionDir)Src\Keyboard;$(SolutionDir)Src\Mouse;$(SolutionDir)Src\Graphics</IncludePath>
+    <IncludePath>$(SolutionDir)Includes;$(SolutionDir)Src;$(SolutionDir)Src\Keyboard;$(SolutionDir)Src\Mouse;$(SolutionDir)Src\Graphics;$(SolutionDir)Src\ImGui</IncludePath>
     <LibraryPath>$(SolutionDir)Libs\$(Platform)\$(Configuration)\;$(LibraryPath)</LibraryPath>
     <OutDir>$(SolutionDir)Build\$(Platform)\$(Configuration)\</OutDir>
     <IntDir>Build\$(Platform)\$(Configuration)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>$(SolutionDir)Includes;$(SolutionDir)Src;$(SolutionDir)Src\Keyboard;$(SolutionDir)Src\Mouse;$(SolutionDir)Src\Graphics</IncludePath>
+    <IncludePath>$(SolutionDir)Includes;$(SolutionDir)Src;$(SolutionDir)Src\Keyboard;$(SolutionDir)Src\Mouse;$(SolutionDir)Src\Graphics;$(SolutionDir)Src\ImGui</IncludePath>
     <LibraryPath>$(SolutionDir)Libs\$(Platform)\$(Configuration)\;$(LibraryPath)</LibraryPath>
     <OutDir>$(SolutionDir)Build\$(Platform)\$(Configuration)\</OutDir>
     <IntDir>Build\$(Platform)\$(Configuration)\</IntDir>

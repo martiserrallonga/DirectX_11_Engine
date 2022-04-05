@@ -11,6 +11,13 @@ bool CGraphics::Init(HWND hwnd, int aWidth, int aHeight)
 	if (!InitShaders()) return false;
 	if (!InitScene()) return false;
 
+	IMGUI_CHECKVERSION();
+	ImGui::CreateContext();
+	ImGuiIO& io = ImGui::GetIO();
+	ImGui_ImplWin32_Init(hwnd);
+	ImGui_ImplDX11_Init(mDevice.Get(), mDeviceContext.Get());
+	ImGui::StyleColorsDark();
+
 	return true;
 }
 
@@ -65,6 +72,14 @@ void CGraphics::Render()
 		DirectX::XMFLOAT2(0.f, 0.f), DirectX::Colors::White, 0.f,
 		DirectX::XMFLOAT2(0.f, 0.f), DirectX::XMFLOAT2(1.f, 1.f));
 	mSpriteBatch->End();
+
+	ImGui_ImplDX11_NewFrame();
+	ImGui_ImplWin32_NewFrame();
+	ImGui::NewFrame();
+	ImGui::Begin("Test");
+	ImGui::End();
+	ImGui::Render();
+	ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
 
 	mSwapChain->Present(1, NULL);
 }
