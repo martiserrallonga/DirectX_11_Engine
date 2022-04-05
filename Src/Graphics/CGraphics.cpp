@@ -42,7 +42,8 @@ void CGraphics::Render()
 	UINT Offset = 0;
 
 	// Update Constant Buffer
-	XMMATRIX World = XMMatrixIdentity();
+	static float Translation[3] = { 0.f, 0.f, 0.f };
+	XMMATRIX World = XMMatrixTranslation(Translation[0], Translation[1], Translation[2]);
 	XMMATRIX WVP = World * Camera.GetViewMatrix() * Camera.GetProjectionMatrix();
 	mConstantBuffer.mData.Transform = XMMatrixTranspose(WVP);
 	mConstantBuffer.Update();
@@ -77,6 +78,16 @@ void CGraphics::Render()
 	ImGui_ImplWin32_NewFrame();
 	ImGui::NewFrame();
 	ImGui::Begin("Test");
+
+	static int Counter = 0;
+	ImGui::Text("This is an example test!");
+	if (ImGui::Button("CLICK ME")) Counter++;
+	std::string CounterStr = "Click count: " + std::to_string(Counter);
+	ImGui::SameLine();
+	ImGui::Text(CounterStr.c_str());
+
+	ImGui::DragFloat3("Translation", Translation, 0.1f);
+
 	ImGui::End();
 	ImGui::Render();
 	ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
