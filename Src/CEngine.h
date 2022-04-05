@@ -1,5 +1,6 @@
 #pragma once
 #include "CWindowContainer.h"
+#include "CTimer.h"
 
 class CEngine : public CWindowContainer
 {
@@ -8,5 +9,8 @@ public:
 	bool ProcessMessages();
 	void Update();
 	void Render();
+
+private:
+	CTimer Timer;
 
 };

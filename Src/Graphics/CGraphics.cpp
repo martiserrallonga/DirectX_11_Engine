@@ -2,6 +2,8 @@
 
 bool CGraphics::Init(HWND hwnd, int aWidth, int aHeight)
 {
+	Fps.Start();
+
 	mWindowWidth = aWidth;
 	mWindowHeight = aHeight;
 
@@ -48,8 +50,18 @@ void CGraphics::Render()
 	mDeviceContext->DrawIndexed(mIndexBuffer.GetBufferSize(), 0, 0);
 
 	// Text
+	static int FpsCounter = 0;
+	static std::string FpsString = "FPS: 0";
+	FpsCounter++;
+	if (Fps.GetMiliseconds() > 1000.f) {
+		FpsString = "FPS: " + std::to_string(FpsCounter);
+		FpsCounter = 0;
+		Fps.Restart();
+	}
+
 	mSpriteBatch->Begin();
-	mSpriteFont->DrawString(mSpriteBatch.get(), L"HELLO WORLD!",
+	mSpriteFont->DrawString(mSpriteBatch.get(),
+		CStringConverter::StringToWide(FpsString).c_str(),
 		DirectX::XMFLOAT2(0.f, 0.f), DirectX::Colors::White, 0.f,
 		DirectX::XMFLOAT2(0.f, 0.f), DirectX::XMFLOAT2(1.f, 1.f));
 	mSpriteBatch->End();

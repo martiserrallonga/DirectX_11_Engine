@@ -75,6 +75,9 @@
     <ClCompile Include="Src\Graphics\CCamera.cpp">
       <Filter>Source Files\Graphics</Filter>
     </ClCompile>
+    <ClCompile Include="Src\CTimer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Src\CErrorLogger.h">
@@ -129,6 +132,9 @@
       <Filter>Header Files\Graphics</Filter>
     </ClInclude>
     <ClInclude Include="Src\Graphics\CCamera.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\CTimer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

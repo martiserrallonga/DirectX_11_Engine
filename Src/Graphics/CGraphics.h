@@ -1,19 +1,18 @@
 #pragma once
 #include "CAdapterReader.h"
+#include "CCamera.h"
+#include "CTimer.h"
+
 #include "Shaders.h"
-
-#include <SpriteBatch.h>
-#include <SpriteFont.h>
-
-#include <WICTextureLoader.h>
-
 #include "TVertex.h"
 #include "CVertexBuffer.h"
 #include "CIndexBuffer.h"
-
 #include "CConstantBuffer.h"
 
-#include "CCamera.h"
+#include <WICTextureLoader.h>
+#include <SpriteBatch.h>
+#include <SpriteFont.h>
+
 
 class CGraphics
 {
@@ -55,4 +54,5 @@ private:
 	Microsoft::WRL::ComPtr<ID3D11SamplerState> mSamplerState;
 	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> mTexture;
 
+	CTimer Fps;
 };
