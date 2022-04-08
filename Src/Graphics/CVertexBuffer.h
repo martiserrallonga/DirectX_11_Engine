@@ -18,8 +18,9 @@ public:
 
 	HRESULT Init(ID3D11Device* aDevice, T* aData, UINT aNumVertices)
 	{
+		if (!mStride.get()) mStride = std::make_unique<UINT>(sizeof(T));
+		if (mBuffer.Get()) mBuffer.Reset();
 		mBufferSize = aNumVertices;
-		mStride = std::make_unique<UINT>(sizeof(T));
 
 		D3D11_BUFFER_DESC VertexBufferDesc;
 		ZeroMemory(&VertexBufferDesc, sizeof(VertexBufferDesc));

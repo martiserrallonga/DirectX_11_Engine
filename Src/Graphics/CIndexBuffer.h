@@ -16,6 +16,8 @@ public:
 
 	HRESULT Init(ID3D11Device* aDevice, DWORD* aData, UINT aNumIndices)
 	{
+		if (mBuffer.Get()) mBuffer.Reset();
+
 		mBufferSize = aNumIndices;
 		
 		D3D11_BUFFER_DESC IndexBufferDesc;
