@@ -34,8 +34,8 @@ void CGraphics::Render()
 	mDeviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY::D3D10_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 	mDeviceContext->RSSetState(mRasterizerState.Get());
 	mDeviceContext->OMSetDepthStencilState(mDepthStencilState.Get(), 0);
+	mDeviceContext->OMSetBlendState(mBlendState.Get(), NULL, 0xFFFFFFFF);
 	mDeviceContext->CSSetSamplers(0, 1, mSamplerState.GetAddressOf());
-
 	mDeviceContext->VSSetShader(mVertexShader.GetShader(), NULL, 0);
 	mDeviceContext->PSSetShader(mPixelShader.GetShader(), NULL, 0);
 
@@ -45,10 +45,12 @@ void CGraphics::Render()
 	static float Translation[3] = { 0.f, 0.f, 0.f };
 	XMMATRIX World = XMMatrixTranslation(Translation[0], Translation[1], Translation[2]);
 	XMMATRIX WVP = World * Camera.GetViewMatrix() * Camera.GetProjectionMatrix();
-	mConstantBuffer.mData.Transform = XMMatrixTranspose(WVP);
-	mConstantBuffer.Update();
-
-	mDeviceContext->VSSetConstantBuffers(0, 1, mConstantBuffer.GetAddressOf());
+	mConstantBufferVSOffset.mData.Transform = XMMatrixTranspose(WVP);
+	mConstantBufferVSOffset.Update();
+	mDeviceContext->VSSetConstantBuffers(0, 1, mConstantBufferVSOffset.GetAddressOf());
+	
+	mConstantBufferPSBlending.Update();
+	mDeviceContext->PSSetConstantBuffers(0, 1, mConstantBufferPSBlending.GetAddressOf());
 
 	// Square
 	mDeviceContext->PSSetShaderResources(0, 1, mTexture.GetAddressOf());
@@ -87,6 +89,8 @@ void CGraphics::Render()
 	ImGui::Text(CounterStr.c_str());
 
 	ImGui::DragFloat3("Translation", Translation, 0.1f);
+
+	ImGui::DragFloat("Alpha", &mConstantBufferPSBlending.mData.Alpha, 0.01f, 0.f, 1.f);
 
 	ImGui::End();
 	ImGui::Render();
@@ -218,6 +222,29 @@ bool CGraphics::InitDirectX(HWND hwnd)
 		return false;
 	}
 
+	D3D11_BLEND_DESC BlendDesc;
+	ZeroMemory(&BlendDesc, sizeof(D3D11_BLEND_DESC));
+
+	D3D11_RENDER_TARGET_BLEND_DESC RTBlendDesc;
+	ZeroMemory(&RTBlendDesc, sizeof(D3D11_RENDER_TARGET_BLEND_DESC));
+
+	RTBlendDesc.BlendEnable = true;
+	RTBlendDesc.SrcBlend = D3D11_BLEND::D3D11_BLEND_SRC_ALPHA;
+	RTBlendDesc.DestBlend = D3D11_BLEND::D3D11_BLEND_INV_SRC_ALPHA;
+	RTBlendDesc.BlendOp = D3D11_BLEND_OP::D3D11_BLEND_OP_ADD;
+	RTBlendDesc.SrcBlendAlpha = D3D11_BLEND::D3D11_BLEND_ONE;
+	RTBlendDesc.DestBlendAlpha = D3D11_BLEND::D3D11_BLEND_ZERO;
+	RTBlendDesc.BlendOpAlpha = D3D11_BLEND_OP::D3D11_BLEND_OP_ADD;
+	RTBlendDesc.RenderTargetWriteMask = D3D11_COLOR_WRITE_ENABLE::D3D11_COLOR_WRITE_ENABLE_ALL;
+
+	BlendDesc.RenderTarget[0] = RTBlendDesc;
+
+	hr = mDevice->CreateBlendState(&BlendDesc, mBlendState.GetAddressOf());
+	if (FAILED(hr)) {
+		CErrorLogger::Log(hr, "Failed to create blend state.");
+		return false;
+	}
+
 	mSpriteBatch = std::make_unique<DirectX::SpriteBatch>(mDeviceContext.Get());
 	mSpriteFont = std::make_unique<DirectX::SpriteFont>(mDevice.Get(), L"Data/Fonts/comic_sans_ms_16.spritefont");
 
@@ -314,7 +341,13 @@ bool CGraphics::InitScene()
 		return false;
 	}
 
-	hr = mConstantBuffer.Init(mDevice.Get(), mDeviceContext.Get());
+	hr = mConstantBufferVSOffset.Init(mDevice.Get(), mDeviceContext.Get());
+	if (FAILED(hr)) {
+		CErrorLogger::Log(hr, "Failed to initialize constant buffer.");
+		return false;
+	}
+
+	hr = mConstantBufferPSBlending.Init(mDevice.Get(), mDeviceContext.Get());
 	if (FAILED(hr)) {
 		CErrorLogger::Log(hr, "Failed to initialize constant buffer.");
 		return false;

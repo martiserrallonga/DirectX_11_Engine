@@ -41,7 +41,8 @@ private:
 
 	CVertexShader mVertexShader;
 	CPixelShader mPixelShader;
-	CConstantBuffer<CB_VS_Offset> mConstantBuffer;
+	CConstantBuffer<CB_VS_Offset> mConstantBufferVSOffset;
+	CConstantBuffer<CB_PS_Blending> mConstantBufferPSBlending;
 
 	CVertexBuffer<TVertex> mVertexBuffer;
 	CIndexBuffer mIndexBuffer;
@@ -51,6 +52,7 @@ private:
 	Microsoft::WRL::ComPtr<ID3D11DepthStencilState> mDepthStencilState;
 
 	Microsoft::WRL::ComPtr<ID3D11RasterizerState> mRasterizerState;
+	Microsoft::WRL::ComPtr<ID3D11BlendState> mBlendState;
 	
 	std::unique_ptr<DirectX::SpriteBatch> mSpriteBatch;
 	std::unique_ptr<DirectX::SpriteFont> mSpriteFont;
