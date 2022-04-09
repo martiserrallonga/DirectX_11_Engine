@@ -185,8 +185,8 @@ bool CGraphics::InitDirectX(HWND hwnd)
 
 	mDeviceContext->OMSetRenderTargets(1, mRenderTargetView.GetAddressOf(), mDepthStencilView.Get());
 
-	CD3D11_DEPTH_STENCIL_DESC DepthStencilDesc;
-	ZeroMemory(&DepthStencilDesc, sizeof(CD3D11_DEPTH_STENCIL_DESC));
+	D3D11_DEPTH_STENCIL_DESC DepthStencilDesc;
+	ZeroMemory(&DepthStencilDesc, sizeof(D3D11_DEPTH_STENCIL_DESC));
 	DepthStencilDesc.DepthEnable = true;
 	DepthStencilDesc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK::D3D11_DEPTH_WRITE_MASK_ALL;
 	DepthStencilDesc.DepthFunc = D3D11_COMPARISON_FUNC::D3D11_COMPARISON_LESS_EQUAL;
@@ -209,14 +209,13 @@ bool CGraphics::InitDirectX(HWND hwnd)
 
 	mDeviceContext->RSSetViewports(1, &Viewport);
 
-	CD3D11_RASTERIZER_DESC RasterizerDesc;
-	ZeroMemory(&RasterizerDesc, sizeof(CD3D11_RASTERIZER_DESC));
+	D3D11_RASTERIZER_DESC RasterizerDesc;
+	ZeroMemory(&RasterizerDesc, sizeof(D3D11_RASTERIZER_DESC));
 	RasterizerDesc.FillMode = D3D11_FILL_MODE::D3D11_FILL_SOLID;
 	//RasterizerDesc.FillMode = D3D11_FILL_MODE::D3D11_FILL_WIREFRAME;
 	RasterizerDesc.CullMode = D3D11_CULL_MODE::D3D11_CULL_BACK;
 	
 	hr = mDevice->CreateRasterizerState(&RasterizerDesc, mRasterizerState.GetAddressOf());
-
 	if (FAILED(hr)) {
 		CErrorLogger::Log(hr, "Failed to create rasterizer state.");
 		return false;
