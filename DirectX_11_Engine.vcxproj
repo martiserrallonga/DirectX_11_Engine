@@ -42,6 +42,7 @@
     <ClCompile Include="Src\Source.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Src\CComException.h" />
     <ClInclude Include="Src\CEngine.h" />
     <ClInclude Include="Src\CErrorLogger.h" />
     <ClInclude Include="Src\CRenderWindow.h" />
