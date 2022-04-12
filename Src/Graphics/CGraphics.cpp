@@ -57,8 +57,10 @@ void CGraphics::Render()
 		mDeviceContext->PSSetShaderResources(0, 1, mPebbleTexture.GetAddressOf());
 		mDeviceContext->IASetVertexBuffers(0, 1, mVertexBuffer.GetAddressOf(), mVertexBuffer.GetStridePtr(), &Offset);
 		mDeviceContext->IASetIndexBuffer(mIndexBuffer.Get(), DXGI_FORMAT_R32_UINT, 0);
+		mDeviceContext->RSSetState(mRasterizerCullFrontState.Get());
 		mDeviceContext->DrawIndexed(mIndexBuffer.GetBufferSize(), 0, 0);
-	}
+		mDeviceContext->RSSetState(mRasterizerState.Get());
+		mDeviceContext->DrawIndexed(mIndexBuffer.GetBufferSize(), 0, 0);	}
 
 	// Grass
 	static float TranslationGrass[3] = { 0.f, 0.f, -1.f };
@@ -75,8 +77,10 @@ void CGraphics::Render()
 		mDeviceContext->PSSetShaderResources(0, 1, mGrassTexture.GetAddressOf());
 		mDeviceContext->IASetVertexBuffers(0, 1, mVertexBuffer.GetAddressOf(), mVertexBuffer.GetStridePtr(), &Offset);
 		mDeviceContext->IASetIndexBuffer(mIndexBuffer.Get(), DXGI_FORMAT_R32_UINT, 0);
+		mDeviceContext->RSSetState(mRasterizerCullFrontState.Get());
 		mDeviceContext->DrawIndexed(mIndexBuffer.GetBufferSize(), 0, 0);
-	}
+		mDeviceContext->RSSetState(mRasterizerState.Get());
+		mDeviceContext->DrawIndexed(mIndexBuffer.GetBufferSize(), 0, 0);	}
 
 	// Marbled
 	static float TranslationMarbled[3] = { 0.f, 0.f, 0.f };
@@ -93,6 +97,9 @@ void CGraphics::Render()
 		mDeviceContext->PSSetShaderResources(0, 1, mMarbledTexture.GetAddressOf());
 		mDeviceContext->IASetVertexBuffers(0, 1, mVertexBuffer.GetAddressOf(), mVertexBuffer.GetStridePtr(), &Offset);
 		mDeviceContext->IASetIndexBuffer(mIndexBuffer.Get(), DXGI_FORMAT_R32_UINT, 0);
+		mDeviceContext->RSSetState(mRasterizerCullFrontState.Get());
+		mDeviceContext->DrawIndexed(mIndexBuffer.GetBufferSize(), 0, 0);
+		mDeviceContext->RSSetState(mRasterizerState.Get());
 		mDeviceContext->DrawIndexed(mIndexBuffer.GetBufferSize(), 0, 0);
 	}
 
@@ -263,6 +270,16 @@ bool CGraphics::InitDirectX(HWND hwnd)
 		return false;
 	}
 
+	ZeroMemory(&RasterizerDesc, sizeof(D3D11_RASTERIZER_DESC));
+	RasterizerDesc.FillMode = D3D11_FILL_MODE::D3D11_FILL_SOLID;
+	RasterizerDesc.CullMode = D3D11_CULL_MODE::D3D11_CULL_FRONT;
+
+	hr = mDevice->CreateRasterizerState(&RasterizerDesc, mRasterizerCullFrontState.GetAddressOf());
+	if (FAILED(hr)) {
+		CErrorLogger::Log(hr, "Failed to create rasterizer state.");
+		return false;
+	}
+
 	D3D11_BLEND_DESC BlendDesc;
 	ZeroMemory(&BlendDesc, sizeof(D3D11_BLEND_DESC));
 
@@ -346,10 +363,15 @@ bool CGraphics::InitScene()
 {
 	TVertex Vertex []
 	{
-		TVertex(-0.5f, -0.5f, 0.f, 0.0f, 1.0f),
-		TVertex(-0.5f, +0.5f, 0.f, 0.0f, 0.0f),
-		TVertex(+0.5f, +0.5f, 0.f, 1.0f, 0.0f),
-		TVertex(+0.5f, -0.5f, 0.f, 1.0f, 1.0f),
+		TVertex(-0.5f, -0.5f, -0.5f, 0.0f, 1.0f),
+		TVertex(-0.5f, +0.5f, -0.5f, 0.0f, 0.0f),
+		TVertex(+0.5f, +0.5f, -0.5f, 1.0f, 0.0f),
+		TVertex(+0.5f, -0.5f, -0.5f, 1.0f, 1.0f),
+
+		TVertex(-0.5f, -0.5f, +0.5f, 0.0f, 1.0f),
+		TVertex(-0.5f, +0.5f, +0.5f, 0.0f, 0.0f),
+		TVertex(+0.5f, +0.5f, +0.5f, 1.0f, 0.0f),
+		TVertex(+0.5f, -0.5f, +0.5f, 1.0f, 1.0f),
 	};
 
 	HRESULT hr = mVertexBuffer.Init(mDevice.Get(), Vertex, ARRAYSIZE(Vertex));
@@ -360,8 +382,18 @@ bool CGraphics::InitScene()
 
 	DWORD Index[]
 	{
-		0, 1, 2,
-		0, 2, 3,
+		0,1,2,
+		0,2,3,
+		1,5,6,
+		1,6,2,
+		2,6,7,
+		2,7,3,
+		4,0,3,
+		4,3,7,
+		1,0,4,
+		1,4,5,
+		4,7,6,
+		4,6,5,
 	};
 
 	hr = mIndexBuffer.Init(mDevice.Get(), Index, ARRAYSIZE(Index));
