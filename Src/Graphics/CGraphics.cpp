@@ -40,24 +40,64 @@ void CGraphics::Render()
 	mDeviceContext->PSSetShader(mPixelShader.GetShader(), NULL, 0);
 
 	UINT Offset = 0;
+	static float Alpha = 0.5f;
 
-	// Update Constant Buffer
-	static float Translation[3] = { 0.f, 0.f, 0.f };
-	XMMATRIX World = XMMatrixTranslation(Translation[0], Translation[1], Translation[2]);
-	XMMATRIX WVP = World * Camera.GetViewMatrix() * Camera.GetProjectionMatrix();
-	mConstantBufferVSOffset.mData.Transform = XMMatrixTranspose(WVP);
-	mConstantBufferVSOffset.Update();
-	mDeviceContext->VSSetConstantBuffers(0, 1, mConstantBufferVSOffset.GetAddressOf());
-	
-	mConstantBufferPSBlending.Update();
-	mDeviceContext->PSSetConstantBuffers(0, 1, mConstantBufferPSBlending.GetAddressOf());
+	// Pebble
+	static float TranslationPebble[3] = { 0.f, 0.f, 1.f };
+	{
+		XMMATRIX World = XMMatrixTranslation(TranslationPebble[0], TranslationPebble[1], TranslationPebble[2]);
+		XMMATRIX WVP = World * Camera.GetViewMatrix() * Camera.GetProjectionMatrix();
+		mConstantBufferVSOffset.mData.Transform = XMMatrixTranspose(WVP);
+		mConstantBufferVSOffset.Update();
+		mDeviceContext->VSSetConstantBuffers(0, 1, mConstantBufferVSOffset.GetAddressOf());
 
-	// Square
-	mDeviceContext->PSSetShaderResources(0, 1, mTexture.GetAddressOf());
-	mDeviceContext->IASetVertexBuffers(0, 1, mVertexBuffer.GetAddressOf(), mVertexBuffer.GetStridePtr(), &Offset);
-	mDeviceContext->IASetIndexBuffer(mIndexBuffer.Get(), DXGI_FORMAT_R32_UINT, 0);
+		mConstantBufferPSBlending.mData.Alpha = 1.f;
+		mConstantBufferPSBlending.Update();
+		mDeviceContext->PSSetConstantBuffers(0, 1, mConstantBufferPSBlending.GetAddressOf());
+		mDeviceContext->PSSetShaderResources(0, 1, mPebbleTexture.GetAddressOf());
+		mDeviceContext->IASetVertexBuffers(0, 1, mVertexBuffer.GetAddressOf(), mVertexBuffer.GetStridePtr(), &Offset);
+		mDeviceContext->IASetIndexBuffer(mIndexBuffer.Get(), DXGI_FORMAT_R32_UINT, 0);
+		mDeviceContext->DrawIndexed(mIndexBuffer.GetBufferSize(), 0, 0);
+	}
 
-	mDeviceContext->DrawIndexed(mIndexBuffer.GetBufferSize(), 0, 0);
+	// Grass
+	static float TranslationGrass[3] = { 0.f, 0.f, -1.f };
+	{
+		XMMATRIX World = XMMatrixTranslation(TranslationGrass[0], TranslationGrass[1], TranslationGrass[2]);
+		XMMATRIX WVP = World * Camera.GetViewMatrix() * Camera.GetProjectionMatrix();
+		mConstantBufferVSOffset.mData.Transform = XMMatrixTranspose(WVP);
+		mConstantBufferVSOffset.Update();
+		mDeviceContext->VSSetConstantBuffers(0, 1, mConstantBufferVSOffset.GetAddressOf());
+
+		mConstantBufferPSBlending.mData.Alpha = Alpha;
+		mConstantBufferPSBlending.Update();
+		mDeviceContext->PSSetConstantBuffers(0, 1, mConstantBufferPSBlending.GetAddressOf());
+		mDeviceContext->PSSetShaderResources(0, 1, mGrassTexture.GetAddressOf());
+		mDeviceContext->IASetVertexBuffers(0, 1, mVertexBuffer.GetAddressOf(), mVertexBuffer.GetStridePtr(), &Offset);
+		mDeviceContext->IASetIndexBuffer(mIndexBuffer.Get(), DXGI_FORMAT_R32_UINT, 0);
+		mDeviceContext->DrawIndexed(mIndexBuffer.GetBufferSize(), 0, 0);
+	}
+
+	// Marbled
+	static float TranslationMarbled[3] = { 0.f, 0.f, 0.f };
+	{
+		XMMATRIX World = XMMatrixScaling(5.f, 5.f, 5.f) * XMMatrixTranslation(TranslationMarbled[0], TranslationMarbled[1], TranslationMarbled[2]);
+		XMMATRIX WVP = World * Camera.GetViewMatrix() * Camera.GetProjectionMatrix();
+		mConstantBufferVSOffset.mData.Transform = XMMatrixTranspose(WVP);
+		mConstantBufferVSOffset.Update();
+		mDeviceContext->VSSetConstantBuffers(0, 1, mConstantBufferVSOffset.GetAddressOf());
+
+		mConstantBufferPSBlending.mData.Alpha = 1.f;
+		mConstantBufferPSBlending.Update();
+		mDeviceContext->PSSetConstantBuffers(0, 1, mConstantBufferPSBlending.GetAddressOf());
+		mDeviceContext->PSSetShaderResources(0, 1, mMarbledTexture.GetAddressOf());
+		mDeviceContext->IASetVertexBuffers(0, 1, mVertexBuffer.GetAddressOf(), mVertexBuffer.GetStridePtr(), &Offset);
+		mDeviceContext->IASetIndexBuffer(mIndexBuffer.Get(), DXGI_FORMAT_R32_UINT, 0);
+		mDeviceContext->DrawIndexed(mIndexBuffer.GetBufferSize(), 0, 0);
+	}
+
+
+
 
 	// Text
 	static int FpsCounter = 0;
@@ -88,9 +128,11 @@ void CGraphics::Render()
 	ImGui::SameLine();
 	ImGui::Text(CounterStr.c_str());
 
-	ImGui::DragFloat3("Translation", Translation, 0.1f);
+	ImGui::DragFloat3("Grass Translation", TranslationGrass, 0.1f);
+	ImGui::DragFloat3("Marbled Translation", TranslationMarbled, 0.1f);
+	ImGui::DragFloat3("Pebble Translation", TranslationPebble, 0.1f);
 
-	ImGui::DragFloat("Alpha", &mConstantBufferPSBlending.mData.Alpha, 0.01f, 0.f, 1.f);
+	ImGui::DragFloat("Alpha", &Alpha, 0.01f, 0.f, 1.f);
 
 	ImGui::End();
 	ImGui::Render();
@@ -334,11 +376,27 @@ bool CGraphics::InitScene()
 		return false;
 	}
 
-	hr = DirectX::CreateWICTextureFromFile(mDevice.Get(), L"Data/Textures/car.jpg", nullptr, mTexture.GetAddressOf());
+
+	// Textures
+	hr = DirectX::CreateWICTextureFromFile(mDevice.Get(), L"Data/Textures/grass.jpg", nullptr, mGrassTexture.GetAddressOf());
 	if (FAILED(hr)) {
 		CErrorLogger::Log(hr, "Failed to create wic texture from file.");
 		return false;
 	}
+
+	hr = DirectX::CreateWICTextureFromFile(mDevice.Get(), L"Data/Textures/marbled.jpg", nullptr, mMarbledTexture.GetAddressOf());
+	if (FAILED(hr)) {
+		CErrorLogger::Log(hr, "Failed to create wic texture from file.");
+		return false;
+	}
+	
+	hr = DirectX::CreateWICTextureFromFile(mDevice.Get(), L"Data/Textures/pebble.jpg", nullptr, mPebbleTexture.GetAddressOf());
+	if (FAILED(hr)) {
+		CErrorLogger::Log(hr, "Failed to create wic texture from file.");
+		return false;
+	}
+
+
 
 	hr = mConstantBufferVSOffset.Init(mDevice.Get(), mDeviceContext.Get());
 	if (FAILED(hr)) {
@@ -352,7 +410,7 @@ bool CGraphics::InitScene()
 		return false;
 	}
 
-	Camera.SetPosition(-2.f, 0.f, -2.f);
+	Camera.SetPosition(0.f, 0.f, -4.f);
 
 	float Fov = 90.f;
 	float AspectRatio = static_cast<float>(mWindowWidth) / static_cast<float>(mWindowHeight);

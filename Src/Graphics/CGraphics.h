@@ -60,5 +60,9 @@ private:
 	Microsoft::WRL::ComPtr<ID3D11SamplerState> mSamplerState;
 	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> mTexture;
 
+	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> mGrassTexture;
+	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> mMarbledTexture;
+	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> mPebbleTexture;
+
 	CTimer Fps;
 };
