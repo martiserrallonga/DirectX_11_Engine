@@ -28,6 +28,7 @@
     <ClCompile Include="Src\Graphics\CAdapterReader.cpp" />
     <ClCompile Include="Src\Graphics\CCamera.cpp" />
     <ClCompile Include="Src\Graphics\CGraphics.cpp" />
+    <ClCompile Include="Src\Graphics\CModel.cpp" />
     <ClCompile Include="Src\Graphics\Shaders.cpp" />
     <ClCompile Include="Src\ImGui\imgui.cpp" />
     <ClCompile Include="Src\ImGui\imgui_draw.cpp" />
@@ -54,6 +55,7 @@
     <ClInclude Include="Src\Graphics\CConstantBuffer.h" />
     <ClInclude Include="Src\Graphics\CGraphics.h" />
     <ClInclude Include="Src\Graphics\CIndexBuffer.h" />
+    <ClInclude Include="Src\Graphics\CModel.h" />
     <ClInclude Include="Src\Graphics\ConstantBufferTypes.h" />
     <ClInclude Include="Src\Graphics\CVertexBuffer.h" />
     <ClInclude Include="Src\Graphics\Shaders.h" />

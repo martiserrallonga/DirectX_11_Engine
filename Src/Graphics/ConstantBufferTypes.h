@@ -1,12 +1,12 @@
 #pragma once
 #include <DirectXMath.h>
 
-struct CB_VS_Offset
+struct CBVertexShader
 {
 	DirectX::XMMATRIX Transform;
 };
 
-struct CB_PS_Blending
+struct CBPixelShader
 {
 	float Alpha;
 };

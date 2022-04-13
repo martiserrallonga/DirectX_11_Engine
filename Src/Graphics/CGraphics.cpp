@@ -32,74 +32,12 @@ void CGraphics::Render()
 	mDeviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY::D3D10_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 	mDeviceContext->RSSetState(mRasterizerState.Get());
 	mDeviceContext->OMSetDepthStencilState(mDepthStencilState.Get(), 0);
-	mDeviceContext->OMSetBlendState(mBlendState.Get(), NULL, 0xFFFFFFFF);
+	mDeviceContext->OMSetBlendState(NULL, NULL, 0xFFFFFFFF);
 	mDeviceContext->CSSetSamplers(0, 1, mSamplerState.GetAddressOf());
 	mDeviceContext->VSSetShader(mVertexShader.GetShader(), NULL, 0);
 	mDeviceContext->PSSetShader(mPixelShader.GetShader(), NULL, 0);
 
-	UINT Offset = 0;
-	static float Alpha = 0.5f;
-
-	// Pebble
-	static float TranslationPebble[3] = { 0.f, 0.f, 1.f };
-	{
-		XMMATRIX World = XMMatrixTranslation(TranslationPebble[0], TranslationPebble[1], TranslationPebble[2]);
-		XMMATRIX WVP = World * Camera.GetViewMatrix() * Camera.GetProjectionMatrix();
-		mConstantBufferVSOffset.mData.Transform = XMMatrixTranspose(WVP);
-		mConstantBufferVSOffset.Update();
-		mDeviceContext->VSSetConstantBuffers(0, 1, mConstantBufferVSOffset.GetAddressOf());
-
-		mConstantBufferPSBlending.mData.Alpha = 1.f;
-		mConstantBufferPSBlending.Update();
-		mDeviceContext->PSSetConstantBuffers(0, 1, mConstantBufferPSBlending.GetAddressOf());
-		mDeviceContext->PSSetShaderResources(0, 1, mPebbleTexture.GetAddressOf());
-		mDeviceContext->IASetVertexBuffers(0, 1, mVertexBuffer.GetAddressOf(), mVertexBuffer.GetStridePtr(), &Offset);
-		mDeviceContext->IASetIndexBuffer(mIndexBuffer.Get(), DXGI_FORMAT_R32_UINT, 0);
-		mDeviceContext->RSSetState(mRasterizerCullFrontState.Get());
-		mDeviceContext->DrawIndexed(mIndexBuffer.GetBufferSize(), 0, 0);
-		mDeviceContext->RSSetState(mRasterizerState.Get());
-		mDeviceContext->DrawIndexed(mIndexBuffer.GetBufferSize(), 0, 0);	}
-
-	// Grass
-	static float TranslationGrass[3] = { 0.f, 0.f, -1.f };
-	{
-		XMMATRIX World = XMMatrixTranslation(TranslationGrass[0], TranslationGrass[1], TranslationGrass[2]);
-		XMMATRIX WVP = World * Camera.GetViewMatrix() * Camera.GetProjectionMatrix();
-		mConstantBufferVSOffset.mData.Transform = XMMatrixTranspose(WVP);
-		mConstantBufferVSOffset.Update();
-		mDeviceContext->VSSetConstantBuffers(0, 1, mConstantBufferVSOffset.GetAddressOf());
-
-		mConstantBufferPSBlending.mData.Alpha = Alpha;
-		mConstantBufferPSBlending.Update();
-		mDeviceContext->PSSetConstantBuffers(0, 1, mConstantBufferPSBlending.GetAddressOf());
-		mDeviceContext->PSSetShaderResources(0, 1, mGrassTexture.GetAddressOf());
-		mDeviceContext->IASetVertexBuffers(0, 1, mVertexBuffer.GetAddressOf(), mVertexBuffer.GetStridePtr(), &Offset);
-		mDeviceContext->IASetIndexBuffer(mIndexBuffer.Get(), DXGI_FORMAT_R32_UINT, 0);
-		mDeviceContext->RSSetState(mRasterizerCullFrontState.Get());
-		mDeviceContext->DrawIndexed(mIndexBuffer.GetBufferSize(), 0, 0);
-		mDeviceContext->RSSetState(mRasterizerState.Get());
-		mDeviceContext->DrawIndexed(mIndexBuffer.GetBufferSize(), 0, 0);	}
-
-	// Marbled
-	static float TranslationMarbled[3] = { 0.f, 0.f, 0.f };
-	{
-		XMMATRIX World = XMMatrixScaling(5.f, 5.f, 5.f) * XMMatrixTranslation(TranslationMarbled[0], TranslationMarbled[1], TranslationMarbled[2]);
-		XMMATRIX WVP = World * Camera.GetViewMatrix() * Camera.GetProjectionMatrix();
-		mConstantBufferVSOffset.mData.Transform = XMMatrixTranspose(WVP);
-		mConstantBufferVSOffset.Update();
-		mDeviceContext->VSSetConstantBuffers(0, 1, mConstantBufferVSOffset.GetAddressOf());
-
-		mConstantBufferPSBlending.mData.Alpha = Alpha;
-		mConstantBufferPSBlending.Update();
-		mDeviceContext->PSSetConstantBuffers(0, 1, mConstantBufferPSBlending.GetAddressOf());
-		mDeviceContext->PSSetShaderResources(0, 1, mMarbledTexture.GetAddressOf());
-		mDeviceContext->IASetVertexBuffers(0, 1, mVertexBuffer.GetAddressOf(), mVertexBuffer.GetStridePtr(), &Offset);
-		mDeviceContext->IASetIndexBuffer(mIndexBuffer.Get(), DXGI_FORMAT_R32_UINT, 0);
-		mDeviceContext->RSSetState(mRasterizerCullFrontState.Get());
-		mDeviceContext->DrawIndexed(mIndexBuffer.GetBufferSize(), 0, 0);
-		mDeviceContext->RSSetState(mRasterizerState.Get());
-		mDeviceContext->DrawIndexed(mIndexBuffer.GetBufferSize(), 0, 0);
-	}
+	mModel.Render(Camera.GetViewMatrix() * Camera.GetProjectionMatrix());
 
 	// Text
 	static int FpsCounter = 0;
@@ -130,13 +68,6 @@ void CGraphics::Render()
 	std::string CounterStr = "Click count: " + std::to_string(Counter);
 	ImGui::SameLine();
 	ImGui::Text(CounterStr.c_str());
-
-	ImGui::DragFloat3("Grass Translation", TranslationGrass, 0.1f);
-	ImGui::DragFloat3("Marbled Translation", TranslationMarbled, 0.1f);
-	ImGui::DragFloat3("Pebble Translation", TranslationPebble, 0.1f);
-
-	ImGui::DragFloat("Alpha", &Alpha, 0.01f, 0.f, 1.f);
-
 	ImGui::End();
 	ImGui::Render();
 	ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
@@ -293,45 +224,9 @@ bool CGraphics::InitScene()
 {
 	try
 	{
-		TVertex Vertex[]
-		{
-			TVertex(-0.5f, -0.5f, -0.5f, 0.0f, 1.0f),
-			TVertex(-0.5f, +0.5f, -0.5f, 0.0f, 0.0f),
-			TVertex(+0.5f, +0.5f, -0.5f, 1.0f, 0.0f),
-			TVertex(+0.5f, -0.5f, -0.5f, 1.0f, 1.0f),
-
-			TVertex(-0.5f, -0.5f, +0.5f, 0.0f, 1.0f),
-			TVertex(-0.5f, +0.5f, +0.5f, 0.0f, 0.0f),
-			TVertex(+0.5f, +0.5f, +0.5f, 1.0f, 0.0f),
-			TVertex(+0.5f, -0.5f, +0.5f, 1.0f, 1.0f),
-		};
-
-		HRESULT hr = mVertexBuffer.Init(mDevice.Get(), Vertex, ARRAYSIZE(Vertex));
-		COM_ERROR_IF_FAILED(hr, "Failed to create vertex buffer.");
-
-		DWORD Index[]
-		{
-			0,1,2,
-			0,2,3,
-			1,5,6,
-			1,6,2,
-			2,6,7,
-			2,7,3,
-			4,0,3,
-			4,3,7,
-			1,0,4,
-			1,4,5,
-			4,7,6,
-			4,6,5,
-		};
-
-		hr = mIndexBuffer.Init(mDevice.Get(), Index, ARRAYSIZE(Index));
-		COM_ERROR_IF_FAILED(hr, "Failed to create index buffer.");
-
-		hr = CoInitialize(NULL);
+		HRESULT hr = CoInitialize(NULL);
 		COM_ERROR_IF_FAILED(hr, "Failed to call CoInitialize.");
 
-		// Textures
 		hr = DirectX::CreateWICTextureFromFile(mDevice.Get(), L"Data/Textures/grass.jpg", nullptr, mGrassTexture.GetAddressOf());
 		COM_ERROR_IF_FAILED(hr, "Failed to create wic texture from file.");
 
@@ -341,11 +236,13 @@ bool CGraphics::InitScene()
 		hr = DirectX::CreateWICTextureFromFile(mDevice.Get(), L"Data/Textures/pebble.jpg", nullptr, mPebbleTexture.GetAddressOf());
 		COM_ERROR_IF_FAILED(hr, "Failed to create wic texture from file.");
 
-		hr = mConstantBufferVSOffset.Init(mDevice.Get(), mDeviceContext.Get());
+		hr = mCBVertexShader.Init(mDevice.Get(), mDeviceContext.Get());
 		COM_ERROR_IF_FAILED(hr, "Failed to initialize constant buffer.");
 
-		hr = mConstantBufferPSBlending.Init(mDevice.Get(), mDeviceContext.Get());
+		hr = mCBPixelShader.Init(mDevice.Get(), mDeviceContext.Get());
 		COM_ERROR_IF_FAILED(hr, "Failed to initialize constant buffer.");
+
+		if (!mModel.Init(mDevice.Get(), mDeviceContext.Get(), mMarbledTexture.Get(), mCBVertexShader)) return false;
 
 		float Fov = 90.f;
 		float AspectRatio = static_cast<float>(mWindowWidth) / static_cast<float>(mWindowHeight);

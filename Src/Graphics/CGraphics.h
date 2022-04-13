@@ -8,10 +8,7 @@
 #include "imgui_impl_win32.h"
 
 #include "Shaders.h"
-#include "TVertex.h"
-#include "CVertexBuffer.h"
-#include "CIndexBuffer.h"
-#include "CConstantBuffer.h"
+#include "CModel.h"
 
 #include <WICTextureLoader.h>
 #include <SpriteBatch.h>
@@ -39,13 +36,12 @@ private:
 	Microsoft::WRL::ComPtr<IDXGISwapChain> mSwapChain;
 	Microsoft::WRL::ComPtr<ID3D11RenderTargetView> mRenderTargetView;
 
+	CModel mModel;
+	
 	CVertexShader mVertexShader;
 	CPixelShader mPixelShader;
-	CConstantBuffer<CB_VS_Offset> mConstantBufferVSOffset;
-	CConstantBuffer<CB_PS_Blending> mConstantBufferPSBlending;
-
-	CVertexBuffer<TVertex> mVertexBuffer;
-	CIndexBuffer mIndexBuffer;
+	CConstantBuffer<CBVertexShader> mCBVertexShader;
+	CConstantBuffer<CBPixelShader> mCBPixelShader;
 
 	Microsoft::WRL::ComPtr<ID3D11DepthStencilView> mDepthStencilView;
 	Microsoft::WRL::ComPtr<ID3D11Texture2D> mDepthStencilBuffer;
