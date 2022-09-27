@@ -40,7 +40,7 @@ void CEngine::Update()
 			auto pos = Event.GetPos();
 			float pitch = static_cast<float>(pos.y) * DirectX::XM_PI / 180.f;
 			float yaw = static_cast<float>(pos.x) * DirectX::XM_PI / 180.f;
-			Camera.AddRotation({ pitch, yaw, 0.f });
+			Camera.AddRotation(pitch, yaw, 0.f);
 		}
 	}
 
@@ -57,10 +57,10 @@ void CEngine::Update()
 		Camera.AddPosition(+Camera.GetRight() * CameraSpeed);
 	}
 	if (Keyboard.IsKeyPressed(VK_SPACE)) {
-		Camera.AddPosition({ 0.f, +CameraSpeed, 0.f });
+		Camera.AddPosition(0.f, +CameraSpeed, 0.f);
 	}
 	if (Keyboard.IsKeyPressed(VK_SHIFT)) {
-		Camera.AddPosition({ 0.f, -CameraSpeed, 0.f });
+		Camera.AddPosition(0.f, -CameraSpeed, 0.f);
 	}
 
 }
