@@ -43,6 +43,7 @@ public:
 protected:
 	virtual void UpdateMatrix() = 0;
 	void UpdateViewMatrix();
+	void UpdateWorldMatrix();
 
 private:
 	XMVECTOR mVPos;

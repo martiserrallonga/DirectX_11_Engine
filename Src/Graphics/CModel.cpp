@@ -55,7 +55,8 @@ bool CModel::Init(
 		return false;
 	}
 
-	UpdateWorldMatrix();
+	SetPosition(ZERO);
+	SetRotation(ZERO);
 	return true;
 }
 
@@ -66,7 +67,7 @@ void CModel::SetTexture(ID3D11ShaderResourceView* aTexture)
 
 void CModel::Render(const XMMATRIX& aViewProjectionMatrix)
 {
-	mCBVertexShader->mData.Transform = XMMatrixTranspose(mWorldMatrix * aViewProjectionMatrix);
+	mCBVertexShader->mData.Transform = XMMatrixTranspose(GetTransformMatrix() * aViewProjectionMatrix);
 	mCBVertexShader->Update();
 	
 	UINT Offset = 0;
@@ -75,9 +76,4 @@ void CModel::Render(const XMMATRIX& aViewProjectionMatrix)
 	mDeviceContext->IASetIndexBuffer(mIndexBuffer.Get(), DXGI_FORMAT::DXGI_FORMAT_R32_UINT, 0);
 	mDeviceContext->IASetVertexBuffers(0, 1, mVertexBuffer.GetAddressOf(), mVertexBuffer.GetStridePtr(), &Offset);
 	mDeviceContext->DrawIndexed(mIndexBuffer.GetBufferSize(), 0, 0);
-}
-
-void CModel::UpdateWorldMatrix()
-{
-	mWorldMatrix = XMMatrixIdentity();
 }

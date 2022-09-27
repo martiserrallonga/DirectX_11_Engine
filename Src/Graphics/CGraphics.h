@@ -22,6 +22,8 @@ public:
 	void Render();
 
 	CCamera Camera;
+	CModel mModel;
+
 
 private:
 	bool InitDirectX(HWND hwnd);
@@ -36,8 +38,6 @@ private:
 	Microsoft::WRL::ComPtr<IDXGISwapChain> mSwapChain;
 	Microsoft::WRL::ComPtr<ID3D11RenderTargetView> mRenderTargetView;
 
-	CModel mModel;
-	
 	CVertexShader mVertexShader;
 	CPixelShader mPixelShader;
 	CConstantBuffer<CBVertexShader> mCBVertexShader;

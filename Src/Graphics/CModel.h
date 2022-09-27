@@ -1,12 +1,12 @@
 #pragma once
+
+#include "CTransform.h"
 #include "TVertex.h"
 #include "CVertexBuffer.h"
 #include "CIndexBuffer.h"
 #include "CConstantBuffer.h"
 
-using namespace DirectX;
-
-class CModel
+class CModel : public CTransform
 {
 public:
 	bool Init(
@@ -19,9 +19,9 @@ public:
 	void Render(const XMMATRIX& aViewProjectionMatrix);
 	void SetTexture(ID3D11ShaderResourceView* aTexture);
 
-private:
-	void UpdateWorldMatrix();
+	void UpdateMatrix() override { UpdateWorldMatrix(); }
 
+private:
 	ID3D11Device* mDevice = nullptr;
 	ID3D11DeviceContext* mDeviceContext = nullptr;
 	CConstantBuffer<CBVertexShader>* mCBVertexShader = nullptr;
@@ -29,7 +29,5 @@ private:
 
 	CVertexBuffer<TVertex> mVertexBuffer;
 	CIndexBuffer mIndexBuffer;
-
-	XMMATRIX mWorldMatrix;
 
 };

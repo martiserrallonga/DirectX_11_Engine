@@ -120,3 +120,12 @@ void CTransform::UpdateViewMatrix() //Updates view matrix and also updates the m
 	mRight = XMVector3TransformCoord(RIGHT, YawRotationMatrix);
 }
 
+void CTransform::UpdateWorldMatrix()
+{
+	mTransformMatrix = XMMatrixRotationRollPitchYaw(mRot.x, mRot.y, mRot.z)
+		* XMMatrixTranslation(mPos.x, mPos.y, mPos.z);
+	XMMATRIX YawRotationMatrix = XMMatrixRotationRollPitchYaw(0.f, mRot.y, 0.f);
+	mForward = XMVector3TransformCoord(FORWARD, YawRotationMatrix);
+	mRight = XMVector3TransformCoord(RIGHT, YawRotationMatrix);
+
+}

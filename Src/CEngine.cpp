@@ -63,6 +63,9 @@ void CEngine::Update()
 		Camera.AddPosition(0.f, -CameraSpeed, 0.f);
 	}
 
+	CModel& Model = Graphics.mModel;
+	Model.AddRotation(0.f, 0.0005f * dt, 0.f);
+
 }
 
 void CEngine::Render()
