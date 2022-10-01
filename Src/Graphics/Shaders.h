@@ -4,9 +4,6 @@
 #include <wrl/client.h>
 #include <d3dcompiler.h>
 
-#pragma comment(lib, "D3DCompiler.lib")
-
-
 class CVertexShader
 {
 public:
