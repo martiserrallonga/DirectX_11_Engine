@@ -7,10 +7,8 @@ template<class T>
 class CVertexBuffer
 {
 private:
-	CVertexBuffer(const CVertexBuffer<T>& rhs) = default;
-
 	Microsoft::WRL::ComPtr<ID3D11Buffer> mBuffer;
-	std::unique_ptr<UINT> mStride;
+	std::shared_ptr<UINT> mStride;
 	UINT mBufferSize = 0;
 
 public:
@@ -18,7 +16,7 @@ public:
 
 	HRESULT Init(ID3D11Device* aDevice, T* aData, UINT aNumVertices)
 	{
-		if (!mStride.get()) mStride = std::make_unique<UINT>(sizeof(T));
+		if (!mStride.get()) mStride = std::make_shared<UINT>(sizeof(T));
 		if (mBuffer.Get()) mBuffer.Reset();
 		mBufferSize = aNumVertices;
 

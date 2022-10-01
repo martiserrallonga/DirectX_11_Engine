@@ -6,14 +6,10 @@
 class CIndexBuffer
 {
 private:
-	CIndexBuffer(const CIndexBuffer& rhs) = default;
-
 	Microsoft::WRL::ComPtr<ID3D11Buffer> mBuffer;
 	UINT mBufferSize = 0;
 
 public:
-	CIndexBuffer() = default;
-
 	HRESULT Init(ID3D11Device* aDevice, DWORD* aData, UINT aNumIndices)
 	{
 		if (mBuffer.Get()) mBuffer.Reset();

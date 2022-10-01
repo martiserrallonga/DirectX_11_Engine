@@ -242,7 +242,8 @@ bool CGraphics::InitScene()
 		hr = mCBPixelShader.Init(mDevice.Get(), mDeviceContext.Get());
 		COM_ERROR_IF_FAILED(hr, "Failed to initialize constant buffer.");
 
-		if (!mModel.Init(mDevice.Get(), mDeviceContext.Get(), mMarbledTexture.Get(), mCBVertexShader)) return false;
+		if (!mModel.Init("Data/Objects/Nanosuit/Nanosuit.obj", mDevice.Get(), mDeviceContext.Get(), mMarbledTexture.Get(), mCBVertexShader))
+			return false;
 
 		float Fov = 90.f;
 		float AspectRatio = static_cast<float>(mWindowWidth) / static_cast<float>(mWindowHeight);
