@@ -8,23 +8,22 @@ class CVertexBuffer
 {
 private:
 	Microsoft::WRL::ComPtr<ID3D11Buffer> mBuffer;
-	std::shared_ptr<UINT> mStride;
-	UINT mBufferSize = 0;
+	UINT mStride = sizeof(T);
+	UINT mVertexCount = 0;
 
 public:
 	CVertexBuffer() = default;
 
-	HRESULT Init(ID3D11Device* aDevice, T* aData, UINT aNumVertices)
+	HRESULT Init(ID3D11Device* aDevice, T* aData, UINT aVertexCount)
 	{
-		if (!mStride.get()) mStride = std::make_shared<UINT>(sizeof(T));
 		if (mBuffer.Get()) mBuffer.Reset();
-		mBufferSize = aNumVertices;
+		mVertexCount = aVertexCount;
 
 		D3D11_BUFFER_DESC VertexBufferDesc;
 		ZeroMemory(&VertexBufferDesc, sizeof(VertexBufferDesc));
 
 		VertexBufferDesc.Usage = D3D11_USAGE_DEFAULT;
-		VertexBufferDesc.ByteWidth = sizeof(T) * aNumVertices;
+		VertexBufferDesc.ByteWidth = sizeof(T) * aVertexCount;
 		VertexBufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
 		VertexBufferDesc.CPUAccessFlags = 0;
 		VertexBufferDesc.MiscFlags = 0;
@@ -43,16 +42,16 @@ public:
 		return mBuffer.GetAddressOf();
 	}
 
-	UINT GetBufferSize() const {
-		return mBufferSize;
+	UINT GetVertexCount() const {
+		return mVertexCount;
 	}
 
 	const UINT GetStride() const {
-		return *mStride.get();
+		return mStride;
 	}
 
 	const UINT* GetStridePtr() const {
-		return mStride.get();
+		return &mStride;
 	}
 
 };

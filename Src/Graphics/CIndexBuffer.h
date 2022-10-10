@@ -7,19 +7,19 @@ class CIndexBuffer
 {
 private:
 	Microsoft::WRL::ComPtr<ID3D11Buffer> mBuffer;
-	UINT mBufferSize = 0;
+	UINT mIndexCount = 0;
 
 public:
-	HRESULT Init(ID3D11Device* aDevice, DWORD* aData, UINT aNumIndices)
+	HRESULT Init(ID3D11Device* aDevice, DWORD* aData, UINT aIndexCount)
 	{
 		if (mBuffer.Get()) mBuffer.Reset();
 
-		mBufferSize = aNumIndices;
+		mIndexCount = aIndexCount;
 		
 		D3D11_BUFFER_DESC IndexBufferDesc;
 		ZeroMemory(&IndexBufferDesc, sizeof(IndexBufferDesc));
 		IndexBufferDesc.Usage = D3D11_USAGE_DEFAULT;
-		IndexBufferDesc.ByteWidth = sizeof(DWORD) * aNumIndices;
+		IndexBufferDesc.ByteWidth = sizeof(DWORD) * aIndexCount;
 		IndexBufferDesc.BindFlags = D3D11_BIND_INDEX_BUFFER;
 		IndexBufferDesc.CPUAccessFlags = 0;
 		IndexBufferDesc.MiscFlags = 0;
@@ -37,8 +37,8 @@ public:
 		return mBuffer.GetAddressOf();
 	}
 
-	UINT GetBufferSize() const {
-		return mBufferSize;
+	UINT GetIndexCount() const {
+		return mIndexCount;
 	}
 
 };

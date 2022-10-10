@@ -21,5 +21,5 @@ void CMesh::Render() const
 	UINT Offset = 0;
 	mDeviceContext->IASetVertexBuffers(0, 1, mVertexBuffer.GetAddressOf(), mVertexBuffer.GetStridePtr(), &Offset);
 	mDeviceContext->IASetIndexBuffer(mIndexBuffer.Get(), DXGI_FORMAT::DXGI_FORMAT_R32_UINT, 0);
-	mDeviceContext->DrawIndexed(mIndexBuffer.GetBufferSize(), 0, 0);
+	mDeviceContext->DrawIndexed(mIndexBuffer.GetIndexCount(), 0, 0);
 }

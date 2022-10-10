@@ -8,7 +8,7 @@
 #include "imgui_impl_win32.h"
 
 #include "Shaders.h"
-#include "CModel.h"
+#include "CGameEntity.h"
 
 #include <WICTextureLoader.h>
 #include <SpriteBatch.h>
@@ -22,8 +22,7 @@ public:
 	void Render();
 
 	CCamera Camera;
-	CModel mModel;
-
+	CGameEntity mSoldier;
 
 private:
 	bool InitDirectX(HWND hwnd);

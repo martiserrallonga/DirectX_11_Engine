@@ -4,21 +4,19 @@
 #include "CMesh.h"
 #include "CConstantBuffer.h"
 
-class CModel : public CTransform
+class CModel
 {
 public:
 	bool Init(
-		const std::string &aFilePath
+		const std::string& aFilePath
 		, ID3D11Device* aDevice
 		, ID3D11DeviceContext* aDeviceContext
 		, ID3D11ShaderResourceView* aTexture
 		, CConstantBuffer<CBVertexShader>& aCBVertexShader
 	);
 
-	void Render(const XMMATRIX& aViewProjectionMatrix);
+	void Render(const XMMATRIX& aModelViewProjectionMatrix) const;
 	void SetTexture(ID3D11ShaderResourceView* aTexture);
-
-	void UpdateMatrix() override { UpdateWorldMatrix(); }
 
 private:
 	bool LoadModel(const std::string& aFilePath);

@@ -37,7 +37,7 @@ void CGraphics::Render()
 	mDeviceContext->VSSetShader(mVertexShader.GetShader(), NULL, 0);
 	mDeviceContext->PSSetShader(mPixelShader.GetShader(), NULL, 0);
 
-	mModel.Render(Camera.GetViewMatrix() * Camera.GetProjectionMatrix());
+	mSoldier.Render(Camera.GetViewMatrix() * Camera.GetProjectionMatrix());
 
 	// Text
 	static int FpsCounter = 0;
@@ -242,7 +242,7 @@ bool CGraphics::InitScene()
 		hr = mCBPixelShader.Init(mDevice.Get(), mDeviceContext.Get());
 		COM_ERROR_IF_FAILED(hr, "Failed to initialize constant buffer.");
 
-		if (!mModel.Init("Data/Objects/Nanosuit/Nanosuit.obj", mDevice.Get(), mDeviceContext.Get(), mMarbledTexture.Get(), mCBVertexShader))
+		if (!mSoldier.Init("Data/Objects/Nanosuit/Nanosuit.obj", mDevice.Get(), mDeviceContext.Get(), mMarbledTexture.Get(), mCBVertexShader))
 			return false;
 
 		float Fov = 90.f;

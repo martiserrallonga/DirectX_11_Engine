@@ -6,7 +6,7 @@ bool CModel::Init(
 	, ID3D11DeviceContext* aDeviceContext
 	, ID3D11ShaderResourceView* aTexture
 	, CConstantBuffer<CBVertexShader>& aCBVertexShader
-){
+) {
 	mDevice = aDevice;
 	mDeviceContext = aDeviceContext;
 	mTexture = aTexture;
@@ -21,10 +21,18 @@ bool CModel::Init(
 		CErrorLogger::Log(exception);
 		return false;
 	}
+}
 
-	SetPosition(ZERO);
-	SetRotation(ZERO);
-	return true;
+void CModel::Render(const XMMATRIX& aModelViewProjectionMatrix) const
+{
+	mCBVertexShader->mData.Transform = XMMatrixTranspose(aModelViewProjectionMatrix);
+	mCBVertexShader->Update();
+
+	mDeviceContext->VSSetConstantBuffers(0, 1, mCBVertexShader->GetAddressOf());
+	mDeviceContext->PSSetShaderResources(0, 1, &mTexture);
+
+	for (const auto& Mesh : mMeshes) Mesh.Render();
+
 }
 
 void CModel::SetTexture(ID3D11ShaderResourceView* aTexture)
@@ -38,7 +46,7 @@ bool CModel::LoadModel(const std::string& aFilePath)
 	const aiScene* pScene = Importer.ReadFile(aFilePath,
 		aiProcess_Triangulate | aiProcess_ConvertToLeftHanded);
 
-	if(!pScene) return false;
+	if (!pScene) return false;
 
 	ProcessNode(pScene->mRootNode, pScene);
 	return true;
@@ -60,7 +68,7 @@ CMesh CModel::ProcessMesh(aiMesh* aMesh, const aiScene* aScene)
 {
 	std::vector<TVertex> Vertices;
 	std::vector<DWORD> Indices;
-	
+
 	for (UINT i = 0; i < aMesh->mNumVertices; i++) {
 		const auto& vtx = aMesh->mVertices[i];
 		TVertex Vertex(vtx.x, vtx.y, vtx.z, 0.f, 0.f);
@@ -83,17 +91,4 @@ CMesh CModel::ProcessMesh(aiMesh* aMesh, const aiScene* aScene)
 	}
 
 	return CMesh(mDevice, mDeviceContext, Vertices, Indices);
-}
-
-void CModel::Render(const XMMATRIX& aViewProjectionMatrix)
-{
-	mCBVertexShader->mData.Transform = XMMatrixTranspose(GetTransformMatrix() * aViewProjectionMatrix);
-	mCBVertexShader->Update();
-	
-	mDeviceContext->VSSetConstantBuffers(0, 1, mCBVertexShader->GetAddressOf());
-	mDeviceContext->PSSetShaderResources(0, 1, &mTexture);
-	
-	for (const auto& Mesh : mMeshes) Mesh.Render();
-	
-
 }
