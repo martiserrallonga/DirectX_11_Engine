@@ -2,6 +2,7 @@
 #include "TVertex.h"
 #include "CVertexBuffer.h"
 #include "CIndexBuffer.h"
+#include "CTexture.h"
 
 #include "assimp/Importer.hpp"
 #include "assimp/postprocess.h"
@@ -12,10 +13,11 @@ struct TVertex;
 class CMesh
 {
 public:
-	CMesh(ID3D11Device* aDevice
-		, ID3D11DeviceContext* aDeviceContext
-		, std::vector<TVertex> aVertices
-		, std::vector<DWORD> &aIndices
+	CMesh(ID3D11Device* aDevice,
+		ID3D11DeviceContext* aDeviceContext,
+		std::vector<TVertex> aVertices,
+		std::vector<DWORD>& aIndices,
+		std::vector<CTexture>& aTextures
 	);
 
 	CMesh(const CMesh& aMesh) = default;
@@ -26,6 +28,7 @@ private:
 	CVertexBuffer<TVertex> mVertexBuffer;
 	CIndexBuffer mIndexBuffer;
 	ID3D11DeviceContext* mDeviceContext;
+	std::vector<CTexture> mTextures;
 
 };
 

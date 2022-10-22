@@ -9,7 +9,6 @@ public:
 		const std::string &aFilePath
 		, ID3D11Device* aDevice
 		, ID3D11DeviceContext* aDeviceContext
-		, ID3D11ShaderResourceView* aTexture
 		, CConstantBuffer<CBVertexShader>& aCBVertexShader
 	);
 

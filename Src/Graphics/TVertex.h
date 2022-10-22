@@ -3,7 +3,6 @@
 
 struct TVertex
 {
-	TVertex() = default;
 	TVertex(float x, float y, float z, float u, float v)
 		: Position(x, y, z)
 		, TexCoord(u, v)

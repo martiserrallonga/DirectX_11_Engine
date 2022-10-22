@@ -2,12 +2,13 @@
 #include "CVertexBuffer.h"
 #include "CComException.h"
 
-CMesh::CMesh(ID3D11Device* aDevice
-	, ID3D11DeviceContext* aDeviceContext
-	, std::vector<TVertex> aVertices
-	, std::vector<DWORD>& aIndices
-)
+CMesh::CMesh(ID3D11Device* aDevice,
+	ID3D11DeviceContext* aDeviceContext,
+	std::vector<TVertex> aVertices,
+	std::vector<DWORD>& aIndices,
+	std::vector<CTexture>& aTextures)
 	: mDeviceContext(aDeviceContext)
+	, mTextures(aTextures)
 {
 	HRESULT hr;
 	hr = mVertexBuffer.Init(aDevice, aVertices.data(), aVertices.size());
@@ -18,6 +19,13 @@ CMesh::CMesh(ID3D11Device* aDevice
 
 void CMesh::Render() const
 {
+	for (auto& texture : mTextures) {
+		if (texture.GetType() == aiTextureType::aiTextureType_DIFFUSE) {
+			mDeviceContext->PSSetShaderResources(0, 1, texture.GetTextureViewAdress());
+			break;
+		}
+	}
+
 	UINT Offset = 0;
 	mDeviceContext->IASetVertexBuffers(0, 1, mVertexBuffer.GetAddressOf(), mVertexBuffer.GetStridePtr(), &Offset);
 	mDeviceContext->IASetIndexBuffer(mIndexBuffer.Get(), DXGI_FORMAT::DXGI_FORMAT_R32_UINT, 0);

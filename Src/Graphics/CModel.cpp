@@ -1,15 +1,13 @@
 #include "CModel.h"
 
 bool CModel::Init(
-	const std::string& aFilePath
-	, ID3D11Device* aDevice
-	, ID3D11DeviceContext* aDeviceContext
-	, ID3D11ShaderResourceView* aTexture
-	, CConstantBuffer<CBVertexShader>& aCBVertexShader
-) {
+	const std::string& aFilePath,
+	ID3D11Device* aDevice,
+	ID3D11DeviceContext* aDeviceContext,
+	CConstantBuffer<CBVertexShader>& aCBVertexShader)
+{
 	mDevice = aDevice;
 	mDeviceContext = aDeviceContext;
-	mTexture = aTexture;
 	mCBVertexShader = &aCBVertexShader;
 
 	try
@@ -29,15 +27,9 @@ void CModel::Render(const XMMATRIX& aModelViewProjectionMatrix) const
 	mCBVertexShader->Update();
 
 	mDeviceContext->VSSetConstantBuffers(0, 1, mCBVertexShader->GetAddressOf());
-	mDeviceContext->PSSetShaderResources(0, 1, &mTexture);
 
 	for (const auto& Mesh : mMeshes) Mesh.Render();
 
-}
-
-void CModel::SetTexture(ID3D11ShaderResourceView* aTexture)
-{
-	mTexture = aTexture;
 }
 
 bool CModel::LoadModel(const std::string& aFilePath)
@@ -90,5 +82,9 @@ CMesh CModel::ProcessMesh(aiMesh* aMesh, const aiScene* aScene)
 		}
 	}
 
-	return CMesh(mDevice, mDeviceContext, Vertices, Indices);
+	std::vector<CTexture> textures;
+	//textures.emplace_back(mDevice, aiTextureType::aiTextureType_DIFFUSE, &TColor::UnloadedTextureColor);
+	textures.emplace_back(mDevice, aiTextureType::aiTextureType_DIFFUSE, &TColor::UnloadedTextureColor);
+
+	return CMesh(mDevice, mDeviceContext, Vertices, Indices, textures);
 }

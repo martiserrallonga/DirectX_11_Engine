@@ -19,6 +19,8 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Src\Graphics\CTexture.cpp" />
+    <ClCompile Include="Src\Graphics\TColor.cpp" />
     <ClCompile Include="Src\CEngine.cpp" />
     <ClCompile Include="Src\CErrorLogger.cpp" />
     <ClCompile Include="Src\CRenderWindow.cpp" />
@@ -46,6 +48,8 @@
     <ClCompile Include="Src\Source.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Src\Graphics\CTexture.h" />
+    <ClInclude Include="Src\Graphics\TColor.h" />
     <ClInclude Include="Src\CComException.h" />
     <ClInclude Include="Src\CEngine.h" />
     <ClInclude Include="Src\CErrorLogger.h" />
