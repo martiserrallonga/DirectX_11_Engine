@@ -1,5 +1,5 @@
 #pragma once
-#include "TColor.h"
+#include "CColor4.h"
 #include "../CComException.h"
 #include <d3d11.h>
 #include <assimp/material.h>
@@ -19,7 +19,8 @@ enum class ETextureStorageType
 class CTexture
 {
 public:
-	CTexture(ID3D11Device* aDevice, aiTextureType aType, const TColor* colorData, UINT width = 1, UINT height = 1);
+	CTexture(ID3D11Device* aDevice, aiTextureType aType, const CColor4& colorData);
+	CTexture(ID3D11Device* aDevice, aiTextureType aType, const CColor4* colorData, UINT width, UINT height);
 
 	aiTextureType GetType() const { return mType; }
 

@@ -242,7 +242,8 @@ bool CGraphics::InitScene()
 		hr = mCBPixelShader.Init(mDevice.Get(), mDeviceContext.Get());
 		COM_ERROR_IF_FAILED(hr, "Failed to initialize constant buffer.");
 
-		if (!mSoldier.Init("Data/Objects/Samples/blue_cube_notexture.fbx", mDevice.Get(), mDeviceContext.Get(), mCBVertexShader))
+		//if (!mSoldier.Init("Data/Objects/Samples/blue_cube_notexture.fbx", mDevice.Get(), mDeviceContext.Get(), mCBVertexShader))
+		if (!mSoldier.Init("Data/Objects/Nanosuit/Nanosuit.obj", mDevice.Get(), mDeviceContext.Get(), mCBVertexShader))
 			return false;
 
 		float Fov = 90.f;

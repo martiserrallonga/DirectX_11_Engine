@@ -1,4 +1,5 @@
 #include "CModel.h"
+#include "CColor4.h"
 
 bool CModel::Init(
 	const std::string& aFilePath,
@@ -82,9 +83,45 @@ CMesh CModel::ProcessMesh(aiMesh* aMesh, const aiScene* aScene)
 		}
 	}
 
-	std::vector<CTexture> textures;
-	//textures.emplace_back(mDevice, aiTextureType::aiTextureType_DIFFUSE, &TColor::UnloadedTextureColor);
-	textures.emplace_back(mDevice, aiTextureType::aiTextureType_DIFFUSE, &TColor::UnloadedTextureColor);
+	std::vector<CTexture> Textures;
+	
+	aiMaterial* Material = aScene->mMaterials[aMesh->mMaterialIndex];
+	std::vector<CTexture> DiffuseTextures = LoadMaterialTextures(Material, aiTextureType::aiTextureType_DIFFUSE, aScene);
+	Textures.insert(Textures.end(), std::make_move_iterator(DiffuseTextures.begin()), std::make_move_iterator(DiffuseTextures.end()));
+	DiffuseTextures.erase(DiffuseTextures.begin(), DiffuseTextures.end());
 
-	return CMesh(mDevice, mDeviceContext, Vertices, Indices, textures);
+	return CMesh(mDevice, mDeviceContext, Vertices, Indices, Textures);
+}
+
+std::vector<CTexture> CModel::LoadMaterialTextures(aiMaterial* aMaterial, aiTextureType aTextureType, const aiScene* pScene)
+{
+	std::vector<CTexture> MaterialTextures;
+	ETextureStorageType StoreType = ETextureStorageType::Invalid;
+	unsigned int TextureCount = aMaterial->GetTextureCount(aTextureType);
+
+	if (TextureCount == 0) {
+		switch (aTextureType) {
+		case aiTextureType_DIFFUSE:
+			CColor4 Color = GetMaterialColor(aMaterial, AI_MATKEY_COLOR_DIFFUSE);
+			if (Color.IsBlack()) {
+				MaterialTextures.emplace_back(mDevice, aTextureType, color::UnloadedTextureColor);
+			}
+			else
+			{
+				MaterialTextures.emplace_back(mDevice, aTextureType, Color);
+			}
+		}
+	}
+	else
+	{
+		MaterialTextures.emplace_back(mDevice, aTextureType, color::UnhandledTextureColor);
+	}
+
+	return MaterialTextures;
+}
+
+CColor4 CModel::GetMaterialColor(aiMaterial* aMaterial, const char* aKey, unsigned int aType, unsigned int aIndex) const {
+	aiColor4D Color;
+	aMaterial->Get(aKey, aType, aIndex, Color);
+	return CColor4(Color);
 }

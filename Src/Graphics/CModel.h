@@ -20,6 +20,10 @@ private:
 	void ProcessNode(aiNode* aNode, const aiScene* aScene);
 	CMesh ProcessMesh(aiMesh* aMesh, const aiScene* aScene);
 
+	std::vector<CTexture> LoadMaterialTextures(aiMaterial* aMaterial, aiTextureType aTextureType, const aiScene* pScene);
+	CColor4 GetMaterialColor(aiMaterial* aMaterial, const char* aKey, unsigned int aType, unsigned int aIndex) const;
+
+
 	std::vector<CMesh> mMeshes;
 
 	ID3D11Device* mDevice = nullptr;

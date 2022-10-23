@@ -114,7 +114,7 @@
     <ClCompile Include="Src\Graphics\CGameEntity.cpp">
       <Filter>Source Files\Graphics</Filter>
     </ClCompile>
-    <ClCompile Include="Src\Graphics\TColor.cpp">
+    <ClCompile Include="Src\Graphics\CColor4.cpp">
       <Filter>Source Files\Graphics</Filter>
     </ClCompile>
     <ClCompile Include="Src\Graphics\CTexture.cpp">
@@ -218,7 +218,7 @@
     <ClInclude Include="Src\Graphics\CGameEntity.h">
       <Filter>Header Files\Graphics</Filter>
     </ClInclude>
-    <ClInclude Include="Src\Graphics\TColor.h">
+    <ClInclude Include="Src\Graphics\CColor4.h">
       <Filter>Header Files\Graphics</Filter>
     </ClInclude>
     <ClInclude Include="Src\Graphics\CTexture.h">

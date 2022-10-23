@@ -19,8 +19,6 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Src\Graphics\CTexture.cpp" />
-    <ClCompile Include="Src\Graphics\TColor.cpp" />
     <ClCompile Include="Src\CEngine.cpp" />
     <ClCompile Include="Src\CErrorLogger.cpp" />
     <ClCompile Include="Src\CRenderWindow.cpp" />
@@ -29,10 +27,12 @@
     <ClCompile Include="Src\CWindowContainer.cpp" />
     <ClCompile Include="Src\Graphics\CAdapterReader.cpp" />
     <ClCompile Include="Src\Graphics\CCamera.cpp" />
+    <ClCompile Include="Src\Graphics\CColor4.cpp" />
     <ClCompile Include="Src\Graphics\CGameEntity.cpp" />
     <ClCompile Include="Src\Graphics\CGraphics.cpp" />
     <ClCompile Include="Src\Graphics\CMesh.cpp" />
     <ClCompile Include="Src\Graphics\CModel.cpp" />
+    <ClCompile Include="Src\Graphics\CTexture.cpp" />
     <ClCompile Include="Src\Graphics\CTransform.cpp" />
     <ClCompile Include="Src\Graphics\Shaders.cpp" />
     <ClCompile Include="Src\ImGui\imgui.cpp" />
@@ -48,8 +48,6 @@
     <ClCompile Include="Src\Source.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Src\Graphics\CTexture.h" />
-    <ClInclude Include="Src\Graphics\TColor.h" />
     <ClInclude Include="Src\CComException.h" />
     <ClInclude Include="Src\CEngine.h" />
     <ClInclude Include="Src\CErrorLogger.h" />
@@ -59,6 +57,7 @@
     <ClInclude Include="Src\CWindowContainer.h" />
     <ClInclude Include="Src\Graphics\CAdapterReader.h" />
     <ClInclude Include="Src\Graphics\CCamera.h" />
+    <ClInclude Include="Src\Graphics\CColor4.h" />
     <ClInclude Include="Src\Graphics\CConstantBuffer.h" />
     <ClInclude Include="Src\Graphics\CGameEntity.h" />
     <ClInclude Include="Src\Graphics\CGraphics.h" />
@@ -66,6 +65,7 @@
     <ClInclude Include="Src\Graphics\CMesh.h" />
     <ClInclude Include="Src\Graphics\CModel.h" />
     <ClInclude Include="Src\Graphics\ConstantBufferTypes.h" />
+    <ClInclude Include="Src\Graphics\CTexture.h" />
     <ClInclude Include="Src\Graphics\CTransform.h" />
     <ClInclude Include="Src\Graphics\CVertexBuffer.h" />
     <ClInclude Include="Src\Graphics\Shaders.h" />

@@ -1,22 +1,19 @@
 #include "CTexture.h"
 
 
-//CTexture::CTexture(ID3D11Device* aDevice, const TColor& colorData, aiTextureType aType)
-//	: CTexture(aDevice, &colorData, 1, 1, aType)
-//{}
+CTexture::CTexture(ID3D11Device* aDevice, aiTextureType aType, const CColor4& colorData)
+	: CTexture(aDevice, aType, &colorData, 1, 1)
+{}
 
-CTexture::CTexture(ID3D11Device* aDevice, aiTextureType aType, const TColor* colorData, UINT width, UINT height)
+CTexture::CTexture(ID3D11Device* aDevice, aiTextureType aType, const CColor4* colorData, UINT width, UINT height)
 	: mType(aType)
 {
 	CD3D11_TEXTURE2D_DESC TextureDesc(DXGI_FORMAT_R8G8B8A8_UNORM, width, height);
 	ID3D11Texture2D* pTexture = nullptr;
 	D3D11_SUBRESOURCE_DATA ResourceData{};
 	
-	//int color = 0xff0000ff;
-
 	ResourceData.pSysMem = colorData;
-	//ResourceData.pSysMem = &color;
-	ResourceData.SysMemPitch = width * sizeof(TColor);
+	ResourceData.SysMemPitch = width * sizeof(CColor4);
 
 	HRESULT hr = aDevice->CreateTexture2D(&TextureDesc, &ResourceData, &pTexture);
 	COM_ERROR_IF_FAILED(hr, "Failed to initialize texture from color data.");
