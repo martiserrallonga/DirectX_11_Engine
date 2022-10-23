@@ -20,11 +20,14 @@ private:
 	void ProcessNode(aiNode* aNode, const aiScene* aScene);
 	CMesh ProcessMesh(aiMesh* aMesh, const aiScene* aScene);
 
-	std::vector<CTexture> LoadMaterialTextures(aiMaterial* aMaterial, aiTextureType aTextureType, const aiScene* pScene);
-	CColor4 GetMaterialColor(aiMaterial* aMaterial, const char* aKey, unsigned int aType, unsigned int aIndex) const;
+	std::vector<CTexture> LoadMaterialTextures(const aiMaterial* aMaterial, aiTextureType aType, const aiScene* pScene) const;
+	ETextureStorageType DetermineTextureStorageType(const aiScene* aScene, const aiMaterial* aMaterial, unsigned int aIndex, aiTextureType aType) const;
+	CColor4 GetMaterialColor(const aiMaterial* aMaterial, const char* aKey, unsigned int aType, unsigned int aIndex) const;
+	std::string GetTexturePath(const aiMaterial* aMaterial, aiTextureType aType, unsigned int aIndex) const;
 
 
 	std::vector<CMesh> mMeshes;
+	std::string mDirectory;
 
 	ID3D11Device* mDevice = nullptr;
 	ID3D11DeviceContext* mDeviceContext = nullptr;

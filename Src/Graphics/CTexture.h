@@ -7,6 +7,7 @@
 
 enum class ETextureStorageType
 {
+	None,
 	Invalid,
 	Normal,
 	EmbeddedIndexCompressed,
@@ -19,8 +20,11 @@ enum class ETextureStorageType
 class CTexture
 {
 public:
-	CTexture(ID3D11Device* aDevice, aiTextureType aType, const CColor4& colorData);
-	CTexture(ID3D11Device* aDevice, aiTextureType aType, const CColor4* colorData, UINT width, UINT height);
+	CTexture(ID3D11Device* aDevice, aiTextureType aType, const CColor4& aColor);
+	CTexture(ID3D11Device* aDevice, aiTextureType aType, const CColor4* aColorData, UINT width, UINT height);
+	CTexture(ID3D11Device* aDevice, aiTextureType aType, const std::string& aFilePath);
+
+	void InitColorTexture(ID3D11Device* aDevice, const CColor4* aColorData, UINT width, UINT height);
 
 	aiTextureType GetType() const { return mType; }
 

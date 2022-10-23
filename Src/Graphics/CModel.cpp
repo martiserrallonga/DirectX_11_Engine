@@ -35,6 +35,8 @@ void CModel::Render(const XMMATRIX& aModelViewProjectionMatrix) const
 
 bool CModel::LoadModel(const std::string& aFilePath)
 {
+	mDirectory = CStringHelper::GetDirectory(aFilePath);
+
 	Assimp::Importer Importer;
 	const aiScene* pScene = Importer.ReadFile(aFilePath,
 		aiProcess_Triangulate | aiProcess_ConvertToLeftHanded);
@@ -84,8 +86,7 @@ CMesh CModel::ProcessMesh(aiMesh* aMesh, const aiScene* aScene)
 	}
 
 	std::vector<CTexture> Textures;
-	
-	aiMaterial* Material = aScene->mMaterials[aMesh->mMaterialIndex];
+	auto Material = aScene->mMaterials[aMesh->mMaterialIndex];
 	std::vector<CTexture> DiffuseTextures = LoadMaterialTextures(Material, aiTextureType::aiTextureType_DIFFUSE, aScene);
 	Textures.insert(Textures.end(), std::make_move_iterator(DiffuseTextures.begin()), std::make_move_iterator(DiffuseTextures.end()));
 	DiffuseTextures.erase(DiffuseTextures.begin(), DiffuseTextures.end());
@@ -93,35 +94,78 @@ CMesh CModel::ProcessMesh(aiMesh* aMesh, const aiScene* aScene)
 	return CMesh(mDevice, mDeviceContext, Vertices, Indices, Textures);
 }
 
-std::vector<CTexture> CModel::LoadMaterialTextures(aiMaterial* aMaterial, aiTextureType aTextureType, const aiScene* pScene)
+std::vector<CTexture> CModel::LoadMaterialTextures(const aiMaterial* aMaterial, aiTextureType aType, const aiScene* aScene) const
 {
 	std::vector<CTexture> MaterialTextures;
-	ETextureStorageType StoreType = ETextureStorageType::Invalid;
-	unsigned int TextureCount = aMaterial->GetTextureCount(aTextureType);
+	unsigned int TextureCount = aMaterial->GetTextureCount(aType);
 
 	if (TextureCount == 0) {
-		switch (aTextureType) {
-		case aiTextureType_DIFFUSE:
-			CColor4 Color = GetMaterialColor(aMaterial, AI_MATKEY_COLOR_DIFFUSE);
-			if (Color.IsBlack()) {
-				MaterialTextures.emplace_back(mDevice, aTextureType, color::UnloadedTextureColor);
-			}
-			else
-			{
-				MaterialTextures.emplace_back(mDevice, aTextureType, Color);
+		CColor4 Color = GetMaterialColor(aMaterial, AI_MATKEY_COLOR_DIFFUSE);
+		MaterialTextures.emplace_back(mDevice, aType, Color);
+	}
+	else {
+		for (UINT i = 0; i < TextureCount; i++) {
+			aiString Path;
+			aMaterial->GetTexture(aType, i, &Path);
+			ETextureStorageType StoreType = DetermineTextureStorageType(aScene, aMaterial, i, aType);
+
+			switch (StoreType) {
+			case ETextureStorageType::Disk:
+				std::string filename = mDirectory + '/' + Path.C_Str();
+				MaterialTextures.emplace_back(mDevice, aType, filename);
+				break;
 			}
 		}
-	}
-	else
-	{
-		MaterialTextures.emplace_back(mDevice, aTextureType, color::UnhandledTextureColor);
+		MaterialTextures.emplace_back(mDevice, aType, color::UnhandledTextureColor);
 	}
 
+	if (MaterialTextures.size() == 0) MaterialTextures.emplace_back(mDevice, aType, color::UnhandledTextureColor);
 	return MaterialTextures;
 }
 
-CColor4 CModel::GetMaterialColor(aiMaterial* aMaterial, const char* aKey, unsigned int aType, unsigned int aIndex) const {
+ETextureStorageType CModel::DetermineTextureStorageType(const aiScene* aScene, const aiMaterial* aMaterial, unsigned int aIndex, aiTextureType aType) const {
+	if (aMaterial->GetTextureCount(aType) == 0) return ETextureStorageType::None;
+
+	ETextureStorageType Result;
+	
+	std::string Path = GetTexturePath(aMaterial, aType, aIndex);
+	if (Path.front() == '*') {
+		if (aScene->mTextures[0]->mHeight == 0) {
+			Result = ETextureStorageType::EmbeddedIndexCompressed;
+		}
+		else {
+			CErrorLogger::Log("Support does not exist yet for indexed non compressed textures");
+			Result = ETextureStorageType::EmbeddedIndexNonCompressed;
+		}
+	}
+	else if (auto Texture = aScene->GetEmbeddedTexture(Path.c_str())) {
+		if (Texture->mHeight == 0) {
+			Result = ETextureStorageType::EmbeddedCompressed;
+		}
+		else {
+			CErrorLogger::Log("Support does not exist yet for Embedded non compressed textures");
+			Result = ETextureStorageType::EmbeddedNonCompressed;
+		}
+	}
+	else if (Path.find('.') != std::string::npos) {
+		Result = ETextureStorageType::Disk;
+	}
+	else
+	{
+		Result = ETextureStorageType::None;
+	}
+	return Result;
+}
+
+CColor4 CModel::GetMaterialColor(const aiMaterial* aMaterial, const char* aKey, unsigned int aType, unsigned int aIndex) const {
 	aiColor4D Color;
 	aMaterial->Get(aKey, aType, aIndex, Color);
+	if (Color.IsBlack()) return color::UnloadedTextureColor;
 	return CColor4(Color);
+}
+
+std::string CModel::GetTexturePath(const aiMaterial* aMaterial, aiTextureType aType, unsigned int aIndex) const {
+	aiString aiPath;
+	aMaterial->GetTexture(aType, aIndex, &aiPath);
+	return aiPath.C_Str();
 }
