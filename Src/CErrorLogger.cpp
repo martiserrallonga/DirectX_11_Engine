@@ -1,4 +1,5 @@
 #include "CErrorLogger.h"
+#include "CStringHelper.h"
 #include <comdef.h>
 
 void CErrorLogger::Log(std::string aMessage)
@@ -10,7 +11,7 @@ void CErrorLogger::Log(std::string aMessage)
 void CErrorLogger::Log(HRESULT hr, std::string aMessage)
 {
 	_com_error Error(hr);
-	std::wstring Message = L"Error: " + CStringConverter::StringToWide(aMessage) + L'\n' + Error.ErrorMessage();
+	std::wstring Message = L"Error: " + CStringHelper::StringToWide(aMessage) + L'\n' + Error.ErrorMessage();
 	MessageBoxW(NULL, Message.c_str(), L"Error", MB_ICONERROR);
 }
 

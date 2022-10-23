@@ -1,5 +1,4 @@
 #pragma once
-#include "CStringConverter.h"
 #include "CComException.h"
 #include <Windows.h>
 

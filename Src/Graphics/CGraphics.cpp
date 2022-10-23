@@ -51,7 +51,7 @@ void CGraphics::Render()
 
 	mSpriteBatch->Begin();
 	mSpriteFont->DrawString(mSpriteBatch.get(),
-		CStringConverter::StringToWide(FpsString).c_str(),
+		CStringHelper::StringToWide(FpsString).c_str(),
 		DirectX::XMFLOAT2(0.f, 0.f), DirectX::Colors::White, 0.f,
 		DirectX::XMFLOAT2(0.f, 0.f), DirectX::XMFLOAT2(1.f, 1.f));
 	mSpriteBatch->End();

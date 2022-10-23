@@ -11,9 +11,9 @@ bool CRenderWindow::Init(CWindowContainer* aWindowContainer, HINSTANCE aInstance
 {
   hInstance = aInstance;
   mTitle = aTitle;
-  mWTitle = CStringConverter::StringToWide(aTitle);
+  mWTitle = CStringHelper::StringToWide(aTitle);
   mClass = aClass;
-  mWClass = CStringConverter::StringToWide(aClass);
+  mWClass = CStringHelper::StringToWide(aClass);
   mWidth = width;
   mHeight = height;
 

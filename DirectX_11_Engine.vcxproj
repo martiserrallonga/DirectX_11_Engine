@@ -22,7 +22,7 @@
     <ClCompile Include="Src\CEngine.cpp" />
     <ClCompile Include="Src\CErrorLogger.cpp" />
     <ClCompile Include="Src\CRenderWindow.cpp" />
-    <ClCompile Include="Src\CStringConverter.cpp" />
+    <ClCompile Include="Src\CStringHelper.cpp" />
     <ClCompile Include="Src\CTimer.cpp" />
     <ClCompile Include="Src\CWindowContainer.cpp" />
     <ClCompile Include="Src\Graphics\CAdapterReader.cpp" />
@@ -52,7 +52,7 @@
     <ClInclude Include="Src\CEngine.h" />
     <ClInclude Include="Src\CErrorLogger.h" />
     <ClInclude Include="Src\CRenderWindow.h" />
-    <ClInclude Include="Src\CStringConverter.h" />
+    <ClInclude Include="Src\CStringHelper.h" />
     <ClInclude Include="Src\CTimer.h" />
     <ClInclude Include="Src\CWindowContainer.h" />
     <ClInclude Include="Src\Graphics\CAdapterReader.h" />
