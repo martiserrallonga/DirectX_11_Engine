@@ -33,7 +33,7 @@ void CGraphics::Render()
 	mDeviceContext->RSSetState(mRasterizerState.Get());
 	mDeviceContext->OMSetDepthStencilState(mDepthStencilState.Get(), 0);
 	mDeviceContext->OMSetBlendState(NULL, NULL, 0xFFFFFFFF);
-	mDeviceContext->CSSetSamplers(0, 1, mSamplerState.GetAddressOf());
+	mDeviceContext->PSSetSamplers(0, 1, mSamplerState.GetAddressOf());
 	mDeviceContext->VSSetShader(mVertexShader.GetShader(), NULL, 0);
 	mDeviceContext->PSSetShader(mPixelShader.GetShader(), NULL, 0);
 
@@ -174,6 +174,15 @@ bool CGraphics::InitDirectX(HWND hwnd)
 		SamplerDesc.AddressU = D3D11_TEXTURE_ADDRESS_WRAP;
 		SamplerDesc.AddressV = D3D11_TEXTURE_ADDRESS_WRAP;
 		SamplerDesc.AddressW = D3D11_TEXTURE_ADDRESS_WRAP;
+
+		//SamplerDesc.AddressU = D3D11_TEXTURE_ADDRESS_BORDER;
+		//SamplerDesc.AddressV = D3D11_TEXTURE_ADDRESS_BORDER;
+		//SamplerDesc.AddressW = D3D11_TEXTURE_ADDRESS_BORDER;
+		//SamplerDesc.BorderColor[0] = 0.8f;
+		//SamplerDesc.BorderColor[1] = 0.2f;
+		//SamplerDesc.BorderColor[2] = 0.2f;
+		//SamplerDesc.BorderColor[3] = 1.0f;
+
 		hr = mDevice->CreateSamplerState(&SamplerDesc, mSamplerState.GetAddressOf());
 		COM_ERROR_IF_FAILED(hr, "Failed to create sampler state.");
 	}
@@ -245,8 +254,8 @@ bool CGraphics::InitScene()
 		//if (!mSoldier.Init("Data/Objects/Samples/blue_cube_notexture.fbx", mDevice.Get(), mDeviceContext.Get(), mCBVertexShader))
 		//if (!mSoldier.Init("Data/Objects/Nanosuit/Nanosuit.obj", mDevice.Get(), mDeviceContext.Get(), mCBVertexShader))
 		//if (!mSoldier.Init("Data/Objects/Samples/orange_disktexture.fbx", mDevice.Get(), mDeviceContext.Get(), mCBVertexShader))
-		if (!mSoldier.Init("Data/Objects/Samples/orange_embeddedtexture.fbx", mDevice.Get(), mDeviceContext.Get(), mCBVertexShader))
-		//if (!mSoldier.Init("Data/Objects/Samples/person_embeddedindexed.blend", mDevice.Get(), mDeviceContext.Get(), mCBVertexShader))
+		//if (!mSoldier.Init("Data/Objects/Samples/orange_embeddedtexture.fbx", mDevice.Get(), mDeviceContext.Get(), mCBVertexShader))
+		if (!mSoldier.Init("Data/Objects/Samples/person_embeddedindexed.blend", mDevice.Get(), mDeviceContext.Get(), mCBVertexShader))
 			return false;
 
 		float Fov = 90.f;

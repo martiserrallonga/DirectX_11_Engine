@@ -24,6 +24,7 @@ private:
 	ETextureStorageType DetermineTextureStorageType(const aiScene* aScene, const aiMaterial* aMaterial, unsigned int aIndex, aiTextureType aType) const;
 	CColor4 GetMaterialColor(const aiMaterial* aMaterial, const char* aKey, unsigned int aType, unsigned int aIndex) const;
 	std::string GetTexturePath(const aiMaterial* aMaterial, aiTextureType aType, unsigned int aIndex) const;
+	const aiTexture* GetEmbeddedIndexTexture(const aiScene* aScene, const aiString& aPath) const;
 
 
 	std::vector<CMesh> mMeshes;
