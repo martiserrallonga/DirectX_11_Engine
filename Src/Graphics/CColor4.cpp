@@ -1,10 +1,10 @@
 #include "CColor4.h"
 
 CColor4::CColor4(const aiColor4D& color) {
-	r = static_cast<Byte>(color.r * 255.f);
-	g = static_cast<Byte>(color.g * 255.f);
-	b = static_cast<Byte>(color.b * 255.f);
-	a = static_cast<Byte>(color.a * 255.f);
+	r = static_cast<uint8_t>(color.r * 255.f);
+	g = static_cast<uint8_t>(color.g * 255.f);
+	b = static_cast<uint8_t>(color.b * 255.f);
+	a = static_cast<uint8_t>(color.a * 255.f);
 }
 
 CColor4::operator aiColor4D() const {

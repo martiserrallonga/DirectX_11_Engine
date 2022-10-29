@@ -1,8 +1,9 @@
 #pragma once
 #include "CColor4.h"
 #include "../CComException.h"
-#include <d3d11.h>
 #include <assimp/material.h>
+#include <assimp/texture.h>
+#include <d3d11.h>
 #include <wrl/client.h>
 
 enum class ETextureStorageType
@@ -23,6 +24,7 @@ public:
 	CTexture(ID3D11Device* aDevice, aiTextureType aType, const CColor4& aColor);
 	CTexture(ID3D11Device* aDevice, aiTextureType aType, const CColor4* aColorData, UINT width, UINT height);
 	CTexture(ID3D11Device* aDevice, aiTextureType aType, const std::string& aFilePath);
+	CTexture(ID3D11Device* aDevice, aiTextureType aType, const aiTexel* aTexelData, size_t aSize);
 
 	void InitColorTexture(ID3D11Device* aDevice, const CColor4* aColorData, UINT width, UINT height);
 

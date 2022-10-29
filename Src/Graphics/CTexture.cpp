@@ -28,6 +28,12 @@ CTexture::CTexture(ID3D11Device* aDevice, aiTextureType aType, const std::string
 	}
 }
 
+CTexture::CTexture(ID3D11Device* aDevice, aiTextureType aType, const aiTexel* aTexelData, size_t aSize)
+	: mType (aType) {
+	HRESULT hr = DirectX::CreateWICTextureFromMemory(aDevice, reinterpret_cast<const uint8_t*>(aTexelData), aSize, mTexture.GetAddressOf(), mTextureView.GetAddressOf());
+	COM_ERROR_IF_FAILED(hr, "Failed to create Texture from memory.");
+}
+
 void CTexture::InitColorTexture(ID3D11Device* aDevice, const CColor4* aColorData, UINT width, UINT height)
 {
 	CD3D11_TEXTURE2D_DESC TextureDesc(DXGI_FORMAT_R8G8B8A8_UNORM, width, height);

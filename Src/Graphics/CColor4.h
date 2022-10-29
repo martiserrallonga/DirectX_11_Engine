@@ -1,10 +1,9 @@
 #pragma once
 
+#include <stdint.h>
 #include "assimp/color4.h"
 
-using Byte = unsigned char;
-
-class CColor4 : public aiColor4t<Byte>
+class CColor4 : public aiColor4t<uint8_t>
 {
 	using aiColor4t::aiColor4t;
 
