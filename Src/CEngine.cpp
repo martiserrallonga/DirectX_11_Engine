@@ -30,7 +30,7 @@ void CEngine::Update()
 
 	// Input Move Camera 
 	CCamera& Camera = Graphics.Camera;
-	const float CameraSpeed = 0.003f * dt;
+	const float dx = Camera.Speed / 1000.f * dt;
 
 	while (!Mouse.IsEventBufferEmpty()) {
 		CMouseEvent Event = Mouse.ReadEvent();
@@ -45,26 +45,25 @@ void CEngine::Update()
 	}
 
 	if (Keyboard.IsKeyPressed('W')) {
-		Camera.AddPosition(+Camera.GetForward() * CameraSpeed);
+		Camera.AddPosition(+Camera.GetForward() * dx);
 	}
 	if (Keyboard.IsKeyPressed('S')) {
-		Camera.AddPosition(-Camera.GetForward() * CameraSpeed);
+		Camera.AddPosition(-Camera.GetForward() * dx);
 	}
 	if (Keyboard.IsKeyPressed('A')) {
-		Camera.AddPosition(-Camera.GetRight() * CameraSpeed);
+		Camera.AddPosition(-Camera.GetRight() * dx);
 	}
 	if (Keyboard.IsKeyPressed('D')) {
-		Camera.AddPosition(+Camera.GetRight() * CameraSpeed);
+		Camera.AddPosition(+Camera.GetRight() * dx);
 	}
 	if (Keyboard.IsKeyPressed(VK_SPACE)) {
-		Camera.AddPosition(0.f, +CameraSpeed, 0.f);
+		Camera.AddPosition(0.f, +dx, 0.f);
 	}
 	if (Keyboard.IsKeyPressed(VK_SHIFT)) {
-		Camera.AddPosition(0.f, -CameraSpeed, 0.f);
+		Camera.AddPosition(0.f, -dx, 0.f);
 	}
 
-	CGameEntity& Model = Graphics.mSoldier;
-	Model.AddRotation(0.f, 0.0005f * dt, 0.f);
+	if (Graphics.mRotationMode) Graphics.mSoldier.AddRotation(0.f, 0.0005f * dt, 0.f);
 
 }
 

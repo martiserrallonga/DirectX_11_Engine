@@ -7,6 +7,10 @@ const XMVECTOR CTransform::RIGHT = XMVectorSet(1.0f, 0.0f, 0.0f, 0.0f);
 const XMVECTOR CTransform::UP = XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f);
 const XMVECTOR CTransform::FORWARD = XMVectorSet(0.0f, 0.0f, 1.0f, 0.0f);
 
+CTransform::CTransform(const XMMATRIX& aTransformMatrix)
+	: mTransformMatrix(aTransformMatrix)
+{}
+
 void CTransform::SetPosition(const XMVECTOR& pos)
 {
 	XMStoreFloat3(&mPos, pos);

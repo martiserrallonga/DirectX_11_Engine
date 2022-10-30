@@ -11,6 +11,7 @@ public:
 	const XMMATRIX& GetViewMatrix() const { return GetTransformMatrix(); }
 	const XMMATRIX& GetProjectionMatrix() const { return mProjection; }
 
+	float Speed = 3.f;
 
 private:
 	XMMATRIX mProjection;

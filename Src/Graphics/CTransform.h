@@ -7,6 +7,9 @@ using namespace DirectX;
 class CTransform
 {
 public:
+	CTransform() = default;
+	explicit CTransform(const XMMATRIX& aTransformMatrix);
+
 	static const XMVECTOR ZERO;
 	static const XMVECTOR RIGHT;
 	static const XMVECTOR UP;
@@ -39,6 +42,7 @@ public:
 	const XMVECTOR& GetRight() const { return mRight; }
 
 	const XMMATRIX& GetTransformMatrix() const { return mTransformMatrix; }
+	void SetTransformMatrix(const XMMATRIX& aTransformMatrix) { mTransformMatrix = aTransformMatrix; }
 
 protected:
 	virtual void UpdateMatrix() = 0;

@@ -61,4 +61,8 @@ private:
 	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> mPebbleTexture;
 
 	CTimer Fps;
+
+public:
+	bool mRotationMode = false;
+
 };

@@ -6,8 +6,10 @@ CMesh::CMesh(ID3D11Device* aDevice,
 	ID3D11DeviceContext* aDeviceContext,
 	std::vector<TVertex> aVertices,
 	std::vector<DWORD>& aIndices,
-	std::vector<CTexture>& aTextures)
-	: mDeviceContext(aDeviceContext)
+	std::vector<CTexture>& aTextures,
+	const DirectX::XMMATRIX& aTransform)
+	: CTransform(aTransform)
+	, mDeviceContext(aDeviceContext)
 	, mTextures(aTextures)
 {
 	HRESULT hr;

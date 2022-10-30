@@ -24,12 +24,14 @@ bool CModel::Init(
 
 void CModel::Render(const XMMATRIX& aModelViewProjectionMatrix) const
 {
-	mCBVertexShader->mData.Transform = XMMatrixTranspose(aModelViewProjectionMatrix);
-	mCBVertexShader->Update();
-
 	mDeviceContext->VSSetConstantBuffers(0, 1, mCBVertexShader->GetAddressOf());
 
-	for (const auto& Mesh : mMeshes) Mesh.Render();
+	for (const auto& Mesh : mMeshes) {
+		DirectX::XMMATRIX MVPMatrix = Mesh.GetTransformMatrix() * aModelViewProjectionMatrix;
+		mCBVertexShader->mData.Transform = XMMatrixTranspose(std::move(MVPMatrix));
+		mCBVertexShader->Update();
+		Mesh.Render();
+	}
 
 }
 
@@ -43,23 +45,25 @@ bool CModel::LoadModel(const std::string& aFilePath)
 
 	if (!pScene) return false;
 
-	ProcessNode(pScene->mRootNode, pScene);
+	ProcessNode(pScene->mRootNode, pScene, DirectX::XMMatrixIdentity());
 	return true;
 }
 
-void CModel::ProcessNode(aiNode* aNode, const aiScene* aScene)
+void CModel::ProcessNode(const aiNode* aNode, const aiScene* aScene, const XMMATRIX& aParentTransform)
 {
+	auto TransformMatrix = XMMatrixTranspose(XMMATRIX(&aNode->mTransformation.a1)) * aParentTransform;
+
 	for (UINT i = 0; i < aNode->mNumMeshes; i++) {
 		aiMesh* Mesh = aScene->mMeshes[aNode->mMeshes[i]];
-		mMeshes.push_back(ProcessMesh(Mesh, aScene));
+		mMeshes.push_back(ProcessMesh(Mesh, aScene, TransformMatrix));
 	}
 
 	for (UINT i = 0; i < aNode->mNumChildren; i++) {
-		ProcessNode(aNode->mChildren[i], aScene);
+		ProcessNode(aNode->mChildren[i], aScene, TransformMatrix);
 	}
 }
 
-CMesh CModel::ProcessMesh(aiMesh* aMesh, const aiScene* aScene)
+CMesh CModel::ProcessMesh(const aiMesh* aMesh, const aiScene* aScene, const XMMATRIX& aTransform)
 {
 	std::vector<TVertex> Vertices;
 	std::vector<DWORD> Indices;
@@ -91,7 +95,7 @@ CMesh CModel::ProcessMesh(aiMesh* aMesh, const aiScene* aScene)
 	Textures.insert(Textures.end(), std::make_move_iterator(DiffuseTextures.begin()), std::make_move_iterator(DiffuseTextures.end()));
 	DiffuseTextures.erase(DiffuseTextures.begin(), DiffuseTextures.end());
 
-	return CMesh(mDevice, mDeviceContext, Vertices, Indices, Textures);
+	return CMesh(mDevice, mDeviceContext, Vertices, Indices, Textures, aTransform);
 }
 
 std::vector<CTexture> CModel::LoadMaterialTextures(const aiMaterial* aMaterial, aiTextureType aType, const aiScene* aScene) const

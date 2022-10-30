@@ -17,8 +17,8 @@ public:
 
 private:
 	bool LoadModel(const std::string& aFilePath);
-	void ProcessNode(aiNode* aNode, const aiScene* aScene);
-	CMesh ProcessMesh(aiMesh* aMesh, const aiScene* aScene);
+	void ProcessNode(const aiNode* aNode, const aiScene* aScene, const XMMATRIX& aParentTransform);
+	CMesh ProcessMesh(const aiMesh* aMesh, const aiScene* aScene, const XMMATRIX& aTransform);
 
 	std::vector<CTexture> LoadMaterialTextures(const aiMaterial* aMaterial, aiTextureType aType, const aiScene* pScene) const;
 	ETextureStorageType DetermineTextureStorageType(const aiScene* aScene, const aiMaterial* aMaterial, unsigned int aIndex, aiTextureType aType) const;

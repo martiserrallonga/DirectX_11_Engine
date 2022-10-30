@@ -68,6 +68,11 @@ void CGraphics::Render()
 	std::string CounterStr = "Click count: " + std::to_string(Counter);
 	ImGui::SameLine();
 	ImGui::Text(CounterStr.c_str());
+
+	ImGui::InputFloat("Camera Speed", &Camera.Speed, 0.f, 0.f, "%.1f");
+
+	ImGui::Checkbox("Microwave", &mRotationMode);
+
 	ImGui::End();
 	ImGui::Render();
 	ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
@@ -255,7 +260,8 @@ bool CGraphics::InitScene()
 		//if (!mSoldier.Init("Data/Objects/Nanosuit/Nanosuit.obj", mDevice.Get(), mDeviceContext.Get(), mCBVertexShader))
 		//if (!mSoldier.Init("Data/Objects/Samples/orange_disktexture.fbx", mDevice.Get(), mDeviceContext.Get(), mCBVertexShader))
 		//if (!mSoldier.Init("Data/Objects/Samples/orange_embeddedtexture.fbx", mDevice.Get(), mDeviceContext.Get(), mCBVertexShader))
-		if (!mSoldier.Init("Data/Objects/Samples/person_embeddedindexed.blend", mDevice.Get(), mDeviceContext.Get(), mCBVertexShader))
+		//if (!mSoldier.Init("Data/Objects/Samples/person_embeddedindexed.blend", mDevice.Get(), mDeviceContext.Get(), mCBVertexShader))
+		if (!mSoldier.Init("Data/Objects/Samples/dodge_challenger.fbx", mDevice.Get(), mDeviceContext.Get(), mCBVertexShader))
 			return false;
 
 		float Fov = 90.f;

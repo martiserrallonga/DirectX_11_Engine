@@ -1,4 +1,5 @@
 #pragma once
+#include "CTransform.h"
 #include "TVertex.h"
 #include "CVertexBuffer.h"
 #include "CIndexBuffer.h"
@@ -10,19 +11,21 @@
 
 struct TVertex;
 
-class CMesh
+class CMesh : public CTransform
 {
 public:
 	CMesh(ID3D11Device* aDevice,
 		ID3D11DeviceContext* aDeviceContext,
 		std::vector<TVertex> aVertices,
 		std::vector<DWORD>& aIndices,
-		std::vector<CTexture>& aTextures
-	);
+		std::vector<CTexture>& aTextures,
+		const DirectX::XMMATRIX& aTransform);
 
 	CMesh(const CMesh& aMesh) = default;
 
 	void Render() const;
+
+	void UpdateMatrix() override { UpdateWorldMatrix(); }
 
 private:
 	CVertexBuffer<TVertex> mVertexBuffer;
