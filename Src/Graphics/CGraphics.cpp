@@ -37,7 +37,7 @@ void CGraphics::Render()
 	mDeviceContext->VSSetShader(mVertexShader.GetShader(), NULL, 0);
 	mDeviceContext->PSSetShader(mPixelShader.GetShader(), NULL, 0);
 
-	mSoldier.Render(Camera.GetViewMatrix() * Camera.GetProjectionMatrix());
+	mSoldier.Render(Camera.GetViewProjectionMatrix());
 
 	// Text
 	static int FpsCounter = 0;

@@ -14,9 +14,6 @@ public:
 
 	void Render(const XMMATRIX& aViewProjectionMatrix) const;
 	
-protected:
-	void UpdateMatrix() override { UpdateWorldMatrix(); }
-
 private:
 	CModel mModel;
 

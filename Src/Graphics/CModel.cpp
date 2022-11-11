@@ -22,13 +22,13 @@ bool CModel::Init(
 	}
 }
 
-void CModel::Render(const XMMATRIX& aModelViewProjectionMatrix) const
+void CModel::Render(const XMMATRIX& aMVPMatrix) const
 {
 	mDeviceContext->VSSetConstantBuffers(0, 1, mCBVertexShader->GetAddressOf());
 
 	for (const auto& Mesh : mMeshes) {
-		DirectX::XMMATRIX MVPMatrix = Mesh.GetTransformMatrix() * aModelViewProjectionMatrix;
-		mCBVertexShader->mData.Transform = XMMatrixTranspose(std::move(MVPMatrix));
+		DirectX::XMMATRIX MeshMatrix = Mesh.GetTransformMatrix() * aMVPMatrix;
+		mCBVertexShader->mData.Transform = XMMatrixTranspose(std::move(MeshMatrix));
 		mCBVertexShader->Update();
 		Mesh.Render();
 	}

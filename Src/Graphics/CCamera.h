@@ -4,16 +4,16 @@
 class CCamera : public CTransform
 {
 public:
-	void UpdateMatrix() override { UpdateViewMatrix(); }
-
 	void SetProjectionValues(float aFov, float aAspect, float aNear, float aFar);
+	const XMMATRIX& GetViewProjectionMatrix() const;
 
-	const XMMATRIX& GetViewMatrix() const { return GetTransformMatrix(); }
-	const XMMATRIX& GetProjectionMatrix() const { return mProjection; }
+
 
 	float Speed = 3.f;
 
 private:
+	void UpdateMatrix() override;
+
 	XMMATRIX mProjection;
 
 };

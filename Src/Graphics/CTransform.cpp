@@ -2,11 +2,6 @@
 
 using namespace DirectX;
 
-const XMVECTOR CTransform::ZERO = XMVectorSet(0.0f, 0.0f, 0.0f, 0.0f);
-const XMVECTOR CTransform::RIGHT = XMVectorSet(1.0f, 0.0f, 0.0f, 0.0f);
-const XMVECTOR CTransform::UP = XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f);
-const XMVECTOR CTransform::FORWARD = XMVectorSet(0.0f, 0.0f, 1.0f, 0.0f);
-
 CTransform::CTransform(const XMMATRIX& aTransformMatrix)
 	: mTransformMatrix(aTransformMatrix)
 {}
@@ -106,30 +101,14 @@ void CTransform::LookAt(XMFLOAT3 pos)
 	SetRotation(Pitch2, Yaw2, 0.f);
 }
 
-void CTransform::UpdateViewMatrix() //Updates view matrix and also updates the movement vectors
-{
-	//Calculate camera rotation matrix
-	XMMATRIX camRotationMatrix = XMMatrixRotationRollPitchYaw(mRot.x, mRot.y, mRot.z);
-	//Calculate unit vector of cam target based off camera forward value transformed by cam rotation matrix
-	XMVECTOR camTarget = XMVector3TransformCoord(FORWARD, camRotationMatrix);
-	//Adjust cam target to be offset by the camera's current position
-	camTarget += mVPos;
-	//Calculate up direction based on current rotation
-	XMVECTOR upDir = XMVector3TransformCoord(UP, camRotationMatrix);
-	//Rebuild view matrix
-	mTransformMatrix = XMMatrixLookAtLH(mVPos, camTarget, upDir);
-
+void CTransform::UpdateVectorsFromYaw() {
 	XMMATRIX YawRotationMatrix = XMMatrixRotationRollPitchYaw(0.f, mRot.y, 0.f);
-	mForward = XMVector3TransformCoord(FORWARD, YawRotationMatrix);
-	mRight = XMVector3TransformCoord(RIGHT, YawRotationMatrix);
+	mForward = XMVector3TransformCoord(vec::FORWARD, YawRotationMatrix);
+	mRight = XMVector3TransformCoord(vec::RIGHT, YawRotationMatrix);
 }
 
-void CTransform::UpdateWorldMatrix()
-{
+void CTransform::UpdateMatrix() {
 	mTransformMatrix = XMMatrixRotationRollPitchYaw(mRot.x, mRot.y, mRot.z)
 		* XMMatrixTranslation(mPos.x, mPos.y, mPos.z);
-	XMMATRIX YawRotationMatrix = XMMatrixRotationRollPitchYaw(0.f, mRot.y, 0.f);
-	mForward = XMVector3TransformCoord(FORWARD, YawRotationMatrix);
-	mRight = XMVector3TransformCoord(RIGHT, YawRotationMatrix);
-
+	UpdateVectorsFromYaw();
 }

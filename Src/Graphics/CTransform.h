@@ -6,14 +6,11 @@ using namespace DirectX;
 
 class CTransform
 {
+	friend class CCamera;
+
 public:
 	CTransform() = default;
 	explicit CTransform(const XMMATRIX& aTransformMatrix);
-
-	static const XMVECTOR ZERO;
-	static const XMVECTOR RIGHT;
-	static const XMVECTOR UP;
-	static const XMVECTOR FORWARD;
 
 	const XMVECTOR& GetPositionVector() const { return mVPos; }
 	const XMFLOAT3& GetPositionFloat3() const { return mPos; }
@@ -44,12 +41,12 @@ public:
 	const XMMATRIX& GetTransformMatrix() const { return mTransformMatrix; }
 	void SetTransformMatrix(const XMMATRIX& aTransformMatrix) { mTransformMatrix = aTransformMatrix; }
 
-protected:
-	virtual void UpdateMatrix() = 0;
-	void UpdateViewMatrix();
-	void UpdateWorldMatrix();
 
 private:
+	void UpdateVectorsFromYaw();
+	virtual void UpdateMatrix();
+
+
 	XMVECTOR mVPos;
 	XMVECTOR mVRot;
 	XMFLOAT3 mPos;
@@ -62,3 +59,9 @@ private:
 
 };
 
+namespace vec {
+	const XMVECTOR ZERO = XMVectorSet(0.0f, 0.0f, 0.0f, 0.0f);
+	const XMVECTOR RIGHT = XMVectorSet(1.0f, 0.0f, 0.0f, 0.0f);
+	const XMVECTOR UP = XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f);
+	const XMVECTOR FORWARD = XMVectorSet(0.0f, 0.0f, 1.0f, 0.0f);
+}

@@ -25,8 +25,6 @@ public:
 
 	void Render() const;
 
-	void UpdateMatrix() override { UpdateWorldMatrix(); }
-
 private:
 	CVertexBuffer<TVertex> mVertexBuffer;
 	CIndexBuffer mIndexBuffer;
