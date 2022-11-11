@@ -24,6 +24,9 @@ bool CGraphics::Init(HWND hwnd, int aWidth, int aHeight)
 
 void CGraphics::Render()
 {
+	mCBPixelShader.Update();
+	mDeviceContext->PSSetConstantBuffers(0U, 1U, mCBPixelShader.GetAddressOf());
+
 	float BackgroundColor[] = { 0.f, 0.f, 0.f, 1.f };
 	mDeviceContext->ClearRenderTargetView(mRenderTargetView.Get(), BackgroundColor);
 	mDeviceContext->ClearDepthStencilView(mDepthStencilView.Get(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.f, 0);
@@ -68,12 +71,16 @@ void CGraphics::Render()
 	std::string CounterStr = "Click count: " + std::to_string(Counter);
 	ImGui::SameLine();
 	ImGui::Text(CounterStr.c_str());
-
 	ImGui::InputFloat("Camera Speed", &Camera.Speed, 0.f, 0.f, "%.1f");
-
 	ImGui::Checkbox("Microwave", &mRotationMode);
+	
+	ImGui::Separator();
+	ImGui::Text("Light Control");
+	ImGui::ColorEdit3("Ambient Color", &mCBPixelShader.mData.AmbientLight.x);
+	ImGui::DragFloat("Ambient Strenght", &mCBPixelShader.mData.AmbientStrenght, 0.01f, 0.f, 1.f); 
 
 	ImGui::End();
+
 	ImGui::Render();
 	ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
 
@@ -255,6 +262,10 @@ bool CGraphics::InitScene()
 
 		hr = mCBPixelShader.Init(mDevice.Get(), mDeviceContext.Get());
 		COM_ERROR_IF_FAILED(hr, "Failed to initialize constant buffer.");
+
+		mCBPixelShader.mData.AmbientLight = { 1.f, 1.f, 1.f };
+		mCBPixelShader.mData.AmbientStrenght = 1.f;
+
 
 		//if (!mSoldier.Init("Data/Objects/Samples/blue_cube_notexture.fbx", mDevice.Get(), mDeviceContext.Get(), mCBVertexShader))
 		//if (!mSoldier.Init("Data/Objects/Nanosuit/Nanosuit.obj", mDevice.Get(), mDeviceContext.Get(), mCBVertexShader))

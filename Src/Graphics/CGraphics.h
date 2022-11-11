@@ -40,7 +40,7 @@ private:
 	CVertexShader mVertexShader;
 	CPixelShader mPixelShader;
 	CConstantBuffer<CBVertexShader> mCBVertexShader;
-	CConstantBuffer<CBPixelShader> mCBPixelShader;
+	CConstantBuffer<CBAmbientLight> mCBPixelShader;
 
 	Microsoft::WRL::ComPtr<ID3D11DepthStencilView> mDepthStencilView;
 	Microsoft::WRL::ComPtr<ID3D11Texture2D> mDepthStencilBuffer;
