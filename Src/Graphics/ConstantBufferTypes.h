@@ -3,7 +3,8 @@
 
 struct CBVertexShader
 {
-	DirectX::XMMATRIX Transform;
+	DirectX::XMMATRIX MVP;
+	DirectX::XMMATRIX World;
 };
 
 struct CBPixelShader

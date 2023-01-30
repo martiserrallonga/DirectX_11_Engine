@@ -13,7 +13,8 @@ public:
 		ID3D11DeviceContext* aDeviceContext,
 		CConstantBuffer<CBVertexShader>& aCBVertexShader);
 
-	void Render(const XMMATRIX& aMVPMatrix) const;
+	void Render(const XMMATRIX& aWorldMatrix, const XMMATRIX& aViewProjectionMatrix) const;
+
 
 private:
 	bool LoadModel(const std::string& aFilePath);

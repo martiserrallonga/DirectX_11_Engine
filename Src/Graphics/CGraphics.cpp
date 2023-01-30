@@ -71,8 +71,16 @@ void CGraphics::Render()
 	std::string CounterStr = "Click count: " + std::to_string(Counter);
 	ImGui::SameLine();
 	ImGui::Text(CounterStr.c_str());
-	ImGui::InputFloat("Camera Speed", &Camera.Speed, 0.f, 0.f, "%.1f");
+	
+	ImGui::DragFloat("Camera Speed", &Camera.Speed, 1.f, 0.f, 10000.f, "%.1f");
+	XMFLOAT3 CameraPos = Camera.GetPositionFloat3();
+	ImGui::DragFloat3("Camera Pos", &CameraPos.x, Camera.Speed, -1000000.f, 1000000.f, "%.1f");
+	Camera.SetPosition(CameraPos);
 	ImGui::Checkbox("Microwave", &mRotationMode);
+
+	XMFLOAT3 ModelPos = mSoldier.GetPositionFloat3();
+	ImGui::DragFloat3("Model Pos", &ModelPos.x, 1.f, -1000000.f, 1000000.f, "%.1f");
+	mSoldier.SetPosition(ModelPos);
 	
 	ImGui::Separator();
 	ImGui::Text("Light Control");
@@ -233,6 +241,7 @@ bool CGraphics::InitShaders()
 	D3D11_INPUT_ELEMENT_DESC Layout[]{
 		{"POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, ipvd, 0 },
 		{"TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, ipvd, 0 },
+		{"NORMAL", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, ipvd, 0 },
 	};
 	
 	if (!mVertexShader.Init(mDevice, ShaderFolder + L"VertexShader.cso", Layout, ARRAYSIZE(Layout))) return false;
@@ -268,11 +277,11 @@ bool CGraphics::InitScene()
 
 
 		//if (!mSoldier.Init("Data/Objects/Samples/blue_cube_notexture.fbx", mDevice.Get(), mDeviceContext.Get(), mCBVertexShader))
-		//if (!mSoldier.Init("Data/Objects/Nanosuit/Nanosuit.obj", mDevice.Get(), mDeviceContext.Get(), mCBVertexShader))
+		if (!mSoldier.Init("Data/Objects/Nanosuit/Nanosuit.obj", mDevice.Get(), mDeviceContext.Get(), mCBVertexShader))
 		//if (!mSoldier.Init("Data/Objects/Samples/orange_disktexture.fbx", mDevice.Get(), mDeviceContext.Get(), mCBVertexShader))
 		//if (!mSoldier.Init("Data/Objects/Samples/orange_embeddedtexture.fbx", mDevice.Get(), mDeviceContext.Get(), mCBVertexShader))
 		//if (!mSoldier.Init("Data/Objects/Samples/person_embeddedindexed.blend", mDevice.Get(), mDeviceContext.Get(), mCBVertexShader))
-		if (!mSoldier.Init("Data/Objects/Samples/dodge_challenger.fbx", mDevice.Get(), mDeviceContext.Get(), mCBVertexShader))
+		//if (!mSoldier.Init("Data/Objects/Samples/dodge_challenger.fbx", mDevice.Get(), mDeviceContext.Get(), mCBVertexShader))
 			return false;
 
 		float Fov = 90.f;
@@ -280,7 +289,7 @@ bool CGraphics::InitScene()
 		float NearZ = 0.1f;
 		float FarZ = 1000.f;
 		Camera.SetProjectionValues(Fov, AspectRatio, NearZ, FarZ);
-		Camera.SetPosition(0.f, 0.f, -4.f);
+		Camera.SetPosition(0.f, 12.f, -8.f);
 
 	}
 	catch (CComException& Exception)

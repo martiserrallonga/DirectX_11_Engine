@@ -22,13 +22,13 @@ bool CModel::Init(
 	}
 }
 
-void CModel::Render(const XMMATRIX& aMVPMatrix) const
+void CModel::Render(const XMMATRIX& aWorldMatrix, const XMMATRIX& aViewProjectionMatrix) const
 {
 	mDeviceContext->VSSetConstantBuffers(0, 1, mCBVertexShader->GetAddressOf());
 
 	for (const auto& Mesh : mMeshes) {
-		DirectX::XMMATRIX MeshMatrix = Mesh.GetTransformMatrix() * aMVPMatrix;
-		mCBVertexShader->mData.Transform = XMMatrixTranspose(std::move(MeshMatrix));
+		mCBVertexShader->mData.World = Mesh.GetTransformMatrix() * aWorldMatrix;
+		mCBVertexShader->mData.MVP = mCBVertexShader->mData.World * aViewProjectionMatrix;
 		mCBVertexShader->Update();
 		Mesh.Render();
 	}
@@ -70,7 +70,11 @@ CMesh CModel::ProcessMesh(const aiMesh* aMesh, const aiScene* aScene, const XMMA
 
 	for (UINT i = 0; i < aMesh->mNumVertices; i++) {
 		const auto& vtx = aMesh->mVertices[i];
-		TVertex Vertex(vtx.x, vtx.y, vtx.z, 0.f, 0.f);
+		const auto& n = aMesh->mNormals[i];
+		
+		TVertex Vertex;
+		Vertex.Position = { vtx.x, vtx.y, vtx.z };
+		Vertex.Normal = { n.x, n.y, n.z };
 
 		if (aMesh->mTextureCoords[0])
 		{

@@ -8,11 +8,9 @@ bool CGameEntity::Init(
 ){
 	if (!mModel.Init(aFilePath, aDevice, aDeviceContext, aCBVertexShader)) return false;
 
-	SetPosition(700.f, -1000.f, 100.f);
-	SetRotation(0.2f, 0.5f, 0.f);
 	return true;
 }
 
 void CGameEntity::Render(const XMMATRIX& aViewProjectionMatrix) const {
-	mModel.Render(GetTransformMatrix() * aViewProjectionMatrix);
+	mModel.Render(GetTransformMatrix(), aViewProjectionMatrix);
 }
