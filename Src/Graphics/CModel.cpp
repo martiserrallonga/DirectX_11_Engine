@@ -20,6 +20,7 @@ bool CModel::Init(
 		CErrorLogger::Log(exception);
 		return false;
 	}
+	return true;
 }
 
 void CModel::Render(const XMMATRIX& aWorldMatrix, const XMMATRIX& aViewProjectionMatrix) const

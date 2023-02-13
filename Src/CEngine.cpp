@@ -63,6 +63,12 @@ void CEngine::Update()
 		Camera.AddPosition(0.f, -dx, 0.f);
 	}
 
+	if (Keyboard.IsKeyPressed('L')) {
+		auto& light = Graphics.mBulb;
+		light.SetPosition(Camera.GetPositionVector() + Camera.GetForward());
+		light.SetRotation(Camera.GetRotationVector());
+	}
+
 	if (Graphics.mRotationMode) Graphics.mSoldier.AddRotation(0.f, 0.0005f * dt, 0.f);
 
 }

@@ -1,11 +1,8 @@
 #pragma once
 #include "CAdapterReader.h"
 #include "CCamera.h"
+#include "CLight.h"
 #include "CTimer.h"
-
-#include "imgui.h"
-#include "imgui_impl_dx11.h"
-#include "imgui_impl_win32.h"
 
 #include "Shaders.h"
 #include "CGameEntity.h"
@@ -22,7 +19,11 @@ public:
 	void Render();
 
 	CCamera Camera;
+
+	CLight mLight;
+
 	CGameEntity mSoldier;
+	CGameEntity mBulb;
 
 private:
 	bool InitDirectX(HWND hwnd);
@@ -39,8 +40,9 @@ private:
 
 	CVertexShader mVertexShader;
 	CPixelShader mPixelShader;
+	CPixelShader mBulbPixelShader;
 	CConstantBuffer<CBVertexShader> mCBVertexShader;
-	CConstantBuffer<CBAmbientLight> mCBPixelShader;
+	CConstantBuffer<CBLight> mCBPixelShader;
 
 	Microsoft::WRL::ComPtr<ID3D11DepthStencilView> mDepthStencilView;
 	Microsoft::WRL::ComPtr<ID3D11Texture2D> mDepthStencilBuffer;

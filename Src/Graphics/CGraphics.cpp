@@ -1,6 +1,10 @@
 #include "CGraphics.h"
 #include "CComException.h"
 
+#include "imgui.h"
+#include "imgui_impl_dx11.h"
+#include "imgui_impl_win32.h"
+
 bool CGraphics::Init(HWND hwnd, int aWidth, int aHeight)
 {
 	Fps.Start();
@@ -24,10 +28,11 @@ bool CGraphics::Init(HWND hwnd, int aWidth, int aHeight)
 
 void CGraphics::Render()
 {
+	mLight.Update();
 	mCBPixelShader.Update();
 	mDeviceContext->PSSetConstantBuffers(0U, 1U, mCBPixelShader.GetAddressOf());
 
-	float BackgroundColor[] = { 0.f, 0.f, 0.f, 1.f };
+	float BackgroundColor[] = { 0.1f, 0.1f, 0.1f, 1.f };
 	mDeviceContext->ClearRenderTargetView(mRenderTargetView.Get(), BackgroundColor);
 	mDeviceContext->ClearDepthStencilView(mDepthStencilView.Get(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.f, 0);
 
@@ -41,6 +46,9 @@ void CGraphics::Render()
 	mDeviceContext->PSSetShader(mPixelShader.GetShader(), NULL, 0);
 
 	mSoldier.Render(Camera.GetViewProjectionMatrix());
+	
+	mDeviceContext->PSSetShader(mBulbPixelShader.GetShader(), NULL, 0);
+	mBulb.Render(Camera.GetViewProjectionMatrix());
 
 	// Text
 	static int FpsCounter = 0;
@@ -83,9 +91,7 @@ void CGraphics::Render()
 	mSoldier.SetPosition(ModelPos);
 	
 	ImGui::Separator();
-	ImGui::Text("Light Control");
-	ImGui::ColorEdit3("Ambient Color", &mCBPixelShader.mData.AmbientLight.x);
-	ImGui::DragFloat("Ambient Strenght", &mCBPixelShader.mData.AmbientStrenght, 0.01f, 0.f, 1.f); 
+	mLight.RenderImGui();
 
 	ImGui::End();
 
@@ -246,6 +252,7 @@ bool CGraphics::InitShaders()
 	
 	if (!mVertexShader.Init(mDevice, ShaderFolder + L"VertexShader.cso", Layout, ARRAYSIZE(Layout))) return false;
 	if (!mPixelShader.Init(mDevice, ShaderFolder + L"PixelShader.cso")) return false;
+	if (!mBulbPixelShader.Init(mDevice, ShaderFolder + L"BulbPixelShader.cso")) return false;
 
 	return true;
 }
@@ -272,17 +279,19 @@ bool CGraphics::InitScene()
 		hr = mCBPixelShader.Init(mDevice.Get(), mDeviceContext.Get());
 		COM_ERROR_IF_FAILED(hr, "Failed to initialize constant buffer.");
 
-		mCBPixelShader.mData.AmbientLight = { 1.f, 1.f, 1.f };
-		mCBPixelShader.mData.AmbientStrenght = 1.f;
-
-
 		//if (!mSoldier.Init("Data/Objects/Samples/blue_cube_notexture.fbx", mDevice.Get(), mDeviceContext.Get(), mCBVertexShader))
-		if (!mSoldier.Init("Data/Objects/Nanosuit/Nanosuit.obj", mDevice.Get(), mDeviceContext.Get(), mCBVertexShader))
 		//if (!mSoldier.Init("Data/Objects/Samples/orange_disktexture.fbx", mDevice.Get(), mDeviceContext.Get(), mCBVertexShader))
 		//if (!mSoldier.Init("Data/Objects/Samples/orange_embeddedtexture.fbx", mDevice.Get(), mDeviceContext.Get(), mCBVertexShader))
 		//if (!mSoldier.Init("Data/Objects/Samples/person_embeddedindexed.blend", mDevice.Get(), mDeviceContext.Get(), mCBVertexShader))
 		//if (!mSoldier.Init("Data/Objects/Samples/dodge_challenger.fbx", mDevice.Get(), mDeviceContext.Get(), mCBVertexShader))
+		if (!mSoldier.Init("Data/Objects/Nanosuit/Nanosuit.obj", mDevice.Get(), mDeviceContext.Get(), mCBVertexShader))
 			return false;
+
+		if (!mBulb.Init("Data/Objects/light.fbx", mDevice.Get(), mDeviceContext.Get(), mCBVertexShader))
+			return false;
+
+		mLight.Init(&mBulb, &mCBPixelShader);
+
 
 		float Fov = 90.f;
 		float AspectRatio = static_cast<float>(mWindowWidth) / static_cast<float>(mWindowHeight);

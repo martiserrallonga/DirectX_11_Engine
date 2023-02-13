@@ -12,8 +12,13 @@ struct CBPixelShader
 	float Alpha;
 };
 
-struct CBAmbientLight
+struct CBLight
 {
-	DirectX::XMFLOAT3 AmbientLight;
-	float AmbientStrenght;
+	DirectX::XMFLOAT3 AmbientColor;
+	float AmbientStrength;
+
+	DirectX::XMFLOAT3 DirectionalColor;
+	float DirectionalStrength;
+	
+	DirectX::XMFLOAT3 DirectionalPosition;
 };

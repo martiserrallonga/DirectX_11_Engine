@@ -102,7 +102,8 @@ void CTransform::LookAt(XMFLOAT3 pos)
 }
 
 void CTransform::UpdateVectorsFromYaw() {
-	XMMATRIX YawRotationMatrix = XMMatrixRotationRollPitchYaw(0.f, mRot.y, 0.f);
+	//XMMATRIX YawRotationMatrix = XMMatrixRotationRollPitchYaw(0.f, mRot.y, 0.f);
+	XMMATRIX YawRotationMatrix = XMMatrixRotationRollPitchYaw(mRot.x, mRot.y, mRot.z);
 	mForward = XMVector3TransformCoord(vec::FORWARD, YawRotationMatrix);
 	mRight = XMVector3TransformCoord(vec::RIGHT, YawRotationMatrix);
 }
