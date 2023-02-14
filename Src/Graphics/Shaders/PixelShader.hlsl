@@ -7,7 +7,12 @@ cbuffer LightBuffer : register(b0)
     float DirectionalStrength;
     
 	float3 DirectionalPosition;
-    float dummy;
+    float dummy3;
+    
+    float Attenuation_A;
+    float Attenuation_B;
+    float Attenuation_C;
+    float dummy4;
 }
 
 struct PS_INPUT
@@ -31,7 +36,12 @@ float4 main(PS_INPUT input) : SV_TARGET
     // Directional Light
     float3 vectorToLight = normalize(DirectionalPosition - input.WorldPos);
     float facingToLight = clamp(dot(vectorToLight, input.Normal), 0.f, 1.f); 
-    light += DirectionalColor * DirectionalStrength * facingToLight;
+    
+    // Light Attenuation
+    float d = distance(DirectionalPosition, input.WorldPos);
+    float attenuation = max(1.0, Attenuation_A * d * (Attenuation_B * d + Attenuation_C));
+    
+    light += DirectionalColor * DirectionalStrength * facingToLight / attenuation;
     
     // Final Color
     float3 finalColor = pixelColor * light;

@@ -21,4 +21,10 @@ struct CBLight
 	float DirectionalStrength;
 	
 	DirectX::XMFLOAT3 DirectionalPosition;
+	float dummy3;
+
+	float Attenuation_A;
+	float Attenuation_B;
+	float Attenuation_C;
+	float dummy4;
 };
