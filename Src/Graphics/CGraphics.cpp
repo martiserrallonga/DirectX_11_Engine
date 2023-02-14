@@ -1,5 +1,6 @@
 #include "CGraphics.h"
 #include "CComException.h"
+#include "CPathProvider.h"
 
 #include "imgui.h"
 #include "imgui_impl_dx11.h"
@@ -194,7 +195,8 @@ bool CGraphics::InitDirectX(HWND hwnd)
 		COM_ERROR_IF_FAILED(hr, "Failed to create blend state.");
 
 		mSpriteBatch = std::make_unique<DirectX::SpriteBatch>(mDeviceContext.Get());
-		mSpriteFont = std::make_unique<DirectX::SpriteFont>(mDevice.Get(), L"Data/Fonts/comic_sans_ms_16.spritefont");
+		auto path = CPathProvider::WGetData("Fonts/comic_sans_ms_16.spritefont");
+		mSpriteFont = std::make_unique<DirectX::SpriteFont>(mDevice.Get(), path.c_str());
 
 		CD3D11_SAMPLER_DESC SamplerDesc(D3D11_DEFAULT);
 		SamplerDesc.AddressU = D3D11_TEXTURE_ADDRESS_WRAP;
@@ -264,13 +266,13 @@ bool CGraphics::InitScene()
 		HRESULT hr = CoInitialize(NULL);
 		COM_ERROR_IF_FAILED(hr, "Failed to call CoInitialize.");
 
-		hr = DirectX::CreateWICTextureFromFile(mDevice.Get(), L"Data/Textures/grass.jpg", nullptr, mGrassTexture.GetAddressOf());
+		hr = DirectX::CreateWICTextureFromFile(mDevice.Get(), CPathProvider::WGetData("Textures/grass.jpg").c_str(), nullptr, mGrassTexture.GetAddressOf());
 		COM_ERROR_IF_FAILED(hr, "Failed to create wic texture from file.");
 
-		hr = DirectX::CreateWICTextureFromFile(mDevice.Get(), L"Data/Textures/marbled.jpg", nullptr, mMarbledTexture.GetAddressOf());
+		hr = DirectX::CreateWICTextureFromFile(mDevice.Get(), CPathProvider::WGetData("Textures/marbled.jpg").c_str(), nullptr, mMarbledTexture.GetAddressOf());
 		COM_ERROR_IF_FAILED(hr, "Failed to create wic texture from file.");
 
-		hr = DirectX::CreateWICTextureFromFile(mDevice.Get(), L"Data/Textures/pebble.jpg", nullptr, mPebbleTexture.GetAddressOf());
+		hr = DirectX::CreateWICTextureFromFile(mDevice.Get(), CPathProvider::WGetData("Textures/pebble.jpg").c_str(), nullptr, mPebbleTexture.GetAddressOf());
 		COM_ERROR_IF_FAILED(hr, "Failed to create wic texture from file.");
 
 		hr = mCBVertexShader.Init(mDevice.Get(), mDeviceContext.Get());
@@ -284,10 +286,10 @@ bool CGraphics::InitScene()
 		//if (!mSoldier.Init("Data/Objects/Samples/orange_embeddedtexture.fbx", mDevice.Get(), mDeviceContext.Get(), mCBVertexShader))
 		//if (!mSoldier.Init("Data/Objects/Samples/person_embeddedindexed.blend", mDevice.Get(), mDeviceContext.Get(), mCBVertexShader))
 		//if (!mSoldier.Init("Data/Objects/Samples/dodge_challenger.fbx", mDevice.Get(), mDeviceContext.Get(), mCBVertexShader))
-		if (!mSoldier.Init("Data/Objects/Nanosuit/Nanosuit.obj", mDevice.Get(), mDeviceContext.Get(), mCBVertexShader))
+		if (!mSoldier.Init(CPathProvider::GetData("Objects/Nanosuit/Nanosuit.obj"), mDevice.Get(), mDeviceContext.Get(), mCBVertexShader))
 			return false;
 
-		if (!mBulb.Init("Data/Objects/light.fbx", mDevice.Get(), mDeviceContext.Get(), mCBVertexShader))
+		if (!mBulb.Init(CPathProvider::GetData("Objects/light.fbx"), mDevice.Get(), mDeviceContext.Get(), mCBVertexShader))
 			return false;
 
 		mLight.Init(&mBulb, &mCBPixelShader);
