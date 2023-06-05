@@ -1,16 +1,16 @@
-#include "CErrorLogger.h"
-#include "CRenderWindow.h"
+#include "CWindow.h"
 #include "CInput.h"
+#include "CErrorLogger.h"
 #include <fstream>
 
-CRenderWindow::~CRenderWindow()
+CWindow::~CWindow()
 {
 	if (_hwnd == NULL) return;
 	UnregisterClass(mWClass.c_str(), _hInstance);
 	DestroyWindow(_hwnd);
 }
 
-bool CRenderWindow::Init(HINSTANCE hInstance, CInput& input)
+bool CWindow::Init(HINSTANCE hInstance, CInput& input)
 {
   _hInstance = hInstance;
 	mTitle = "DirectX 11 Engine";
@@ -57,7 +57,7 @@ bool CRenderWindow::Init(HINSTANCE hInstance, CInput& input)
   return true;
 }
 
-void CRenderWindow::RegisterWindowClass()
+void CWindow::RegisterWindowClass()
 {
 	WNDCLASSEX wc; //Our Window Class (This has to be filled before our window can be created) See: https://msdn.microsoft.com/en-us/library/windows/desktop/ms633577(v=vs.85).aspx
 	wc.style = CS_HREDRAW | CS_VREDRAW | CS_OWNDC; //Flags [Redraw on width/height change from resize/movement] See: https://msdn.microsoft.com/en-us/library/windows/desktop/ff729176(v=vs.85).aspx
@@ -75,7 +75,7 @@ void CRenderWindow::RegisterWindowClass()
 	RegisterClassEx(&wc); //Register the class so that it is usable.
 }
 
-bool CRenderWindow::ProcessMessages()
+bool CWindow::ProcessMessages()
 {
 	MSG msg;
 	ZeroMemory(&msg, sizeof(MSG));

@@ -21,7 +21,7 @@
   <ItemGroup>
     <ClCompile Include="Src\CEngine.cpp" />
     <ClCompile Include="Src\CErrorLogger.cpp" />
-    <ClCompile Include="Src\CRenderWindow.cpp" />
+    <ClCompile Include="Src\CWindow.cpp" />
     <ClCompile Include="Src\CStringHelper.cpp" />
     <ClCompile Include="Src\CTimer.cpp" />
     <ClCompile Include="Src\Graphics\CAdapterReader.cpp" />
@@ -44,16 +44,16 @@
     <ClCompile Include="Src\Input\CInput.cpp" />
     <ClCompile Include="Src\Keyboard\CKeyboard.cpp" />
     <ClCompile Include="Src\Keyboard\CKeyboardEvent.cpp" />
+    <ClCompile Include="Src\main.cpp" />
     <ClCompile Include="Src\Mouse\CMouse.cpp" />
     <ClCompile Include="Src\Mouse\CMouseEvent.cpp" />
-    <ClCompile Include="Src\Source.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Src\CComException.h" />
     <ClInclude Include="Src\CEngine.h" />
     <ClInclude Include="Src\CErrorLogger.h" />
     <ClInclude Include="Src\CPathProvider.h" />
-    <ClInclude Include="Src\CRenderWindow.h" />
+    <ClInclude Include="Src\CWindow.h" />
     <ClInclude Include="Src\CStringHelper.h" />
     <ClInclude Include="Src\CTimer.h" />
     <ClInclude Include="Src\Graphics\CAdapterReader.h" />

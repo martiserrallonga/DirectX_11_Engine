@@ -4,15 +4,15 @@ bool CEngine::Init(HINSTANCE hInstance)
 {
 	Timer.Start();
 
-	if (!RenderWindow.Init(hInstance, Input)) return false;
-	if (!Graphics.Init(RenderWindow)) return false;
+	if (!Window.Init(hInstance, Input)) return false;
+	if (!Graphics.Init(Window)) return false;
 
 	return true;
 }
 
 bool CEngine::ProcessMessages()
 {
-	return RenderWindow.ProcessMessages();
+	return Window.ProcessMessages();
 }
 
 void CEngine::Update()

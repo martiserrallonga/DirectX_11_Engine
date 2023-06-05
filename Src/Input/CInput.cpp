@@ -37,7 +37,7 @@ LRESULT CInput::HandleMessageRedirect(HWND hwnd, UINT uMsg, WPARAM wParam, LPARA
 		return 0;
 	}
 
-	auto input = std::_Bit_cast<CInput*>(GetWindowLongPtr(hwnd, GWLP_USERDATA));
+	auto input = reinterpret_cast<CInput*>(GetWindowLongPtr(hwnd, GWLP_USERDATA));
 	return input->WindowProc(hwnd, uMsg, wParam, lParam);
 }
 

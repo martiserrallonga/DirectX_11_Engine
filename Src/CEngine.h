@@ -1,6 +1,6 @@
 #pragma once
 #include "CInput.h"
-#include "CRenderWindow.h"
+#include "CWindow.h"
 #include "CGraphics.h"
 #include "CTimer.h"
 
@@ -14,7 +14,7 @@ public:
 
 private:
 	CInput Input;
-	CRenderWindow RenderWindow; // TODO: Rename to CWindow Window
+	CWindow Window;
 	CGraphics Graphics;
 	CTimer Timer;
 };

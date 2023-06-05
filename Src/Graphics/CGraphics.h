@@ -1,5 +1,5 @@
 #pragma once
-#include "CRenderWindow.h"
+#include "CWindow.h"
 #include "CAdapterReader.h"
 #include "CCamera.h"
 #include "CLight.h"
@@ -14,7 +14,7 @@
 class CGraphics
 {
 public:
-	bool Init(const CRenderWindow& window);
+	bool Init(const CWindow& window);
 	void Render();
 
 	CCamera Camera;

@@ -45,16 +45,16 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Src\main.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="Src\CErrorLogger.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Src\CRenderWindow.cpp">
+    <ClCompile Include="Src\CWindow.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Src\CStringHelper.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Src\Source.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Src\CEngine.cpp">
@@ -134,7 +134,7 @@
     <ClInclude Include="Src\CErrorLogger.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Src\CRenderWindow.h">
+    <ClInclude Include="Src\CWindow.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Src\CStringHelper.h">

@@ -4,10 +4,10 @@
 
 class CInput;
 
-class CRenderWindow
+class CWindow
 {
 public:
-	~CRenderWindow();
+	~CWindow();
 	
 	bool Init(HINSTANCE hInstance, CInput& input);
 	bool ProcessMessages();

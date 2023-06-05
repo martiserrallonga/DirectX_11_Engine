@@ -1,5 +1,3 @@
-// TODO Rename file to main.cpp
-
 #include "CEngine.h"
 
 int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
