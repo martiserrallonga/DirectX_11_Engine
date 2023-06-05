@@ -10,11 +10,10 @@
 #include <SpriteBatch.h>
 #include <SpriteFont.h>
 
-
 class CGraphics
 {
 public:
-	bool Init(const CWindow& window);
+	bool Init(std::string configPath, const CWindow& window);
 	void Render();
 
 	CCamera Camera;
@@ -62,6 +61,8 @@ private:
 	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> mPebbleTexture;
 
 	CTimer Fps;
+
+	std::string _configPath;
 
 public:
 	bool mRotationMode = false;

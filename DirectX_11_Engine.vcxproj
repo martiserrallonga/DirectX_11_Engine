@@ -21,9 +21,9 @@
   <ItemGroup>
     <ClCompile Include="Src\CEngine.cpp" />
     <ClCompile Include="Src\CErrorLogger.cpp" />
-    <ClCompile Include="Src\CWindow.cpp" />
     <ClCompile Include="Src\CStringHelper.cpp" />
     <ClCompile Include="Src\CTimer.cpp" />
+    <ClCompile Include="Src\CWindow.cpp" />
     <ClCompile Include="Src\Graphics\CAdapterReader.cpp" />
     <ClCompile Include="Src\Graphics\CCamera.cpp" />
     <ClCompile Include="Src\Graphics\CColor4.cpp" />
@@ -47,15 +47,16 @@
     <ClCompile Include="Src\main.cpp" />
     <ClCompile Include="Src\Mouse\CMouse.cpp" />
     <ClCompile Include="Src\Mouse\CMouseEvent.cpp" />
+    <ClCompile Include="Src\Utils\Format.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Src\CComException.h" />
     <ClInclude Include="Src\CEngine.h" />
     <ClInclude Include="Src\CErrorLogger.h" />
     <ClInclude Include="Src\CPathProvider.h" />
-    <ClInclude Include="Src\CWindow.h" />
     <ClInclude Include="Src\CStringHelper.h" />
     <ClInclude Include="Src\CTimer.h" />
+    <ClInclude Include="Src\CWindow.h" />
     <ClInclude Include="Src\Graphics\CAdapterReader.h" />
     <ClInclude Include="Src\Graphics\CCamera.h" />
     <ClInclude Include="Src\Graphics\CColor4.h" />
@@ -85,6 +86,8 @@
     <ClInclude Include="Src\Keyboard\CKeyboardEvent.h" />
     <ClInclude Include="Src\Mouse\CMouse.h" />
     <ClInclude Include="Src\Mouse\CMouseEvent.h" />
+    <ClInclude Include="Src\nlohmann\json.h" />
+    <ClInclude Include="Src\Utils\Format.h" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Src\Graphics\Shaders\BulbPixelShader.hlsl">
@@ -160,28 +163,28 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>$(SolutionDir)Includes;$(SolutionDir)Src;$(SolutionDir)Src\Input;$(SolutionDir)Src\Keyboard;$(SolutionDir)Src\Mouse;$(SolutionDir)Src\Graphics;$(SolutionDir)Src\ImGui</IncludePath>
+    <IncludePath>$(SolutionDir)Includes;$(SolutionDir)Src;$(SolutionDir)Src\Input;$(SolutionDir)Src\Keyboard;$(SolutionDir)Src\Mouse;$(SolutionDir)Src\Graphics;$(SolutionDir)Src\ImGui;$(SolutionDir)Src\nlohmann</IncludePath>
     <LibraryPath>$(SolutionDir)Libs\$(Platform)\$(Configuration)\;$(LibraryPath)</LibraryPath>
     <OutDir>$(SolutionDir)Build\$(Platform)\$(Configuration)\</OutDir>
     <IntDir>Build\$(Platform)\$(Configuration)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>$(SolutionDir)Includes;$(SolutionDir)Src;$(SolutionDir)Src\Input;$(SolutionDir)Src\Keyboard;$(SolutionDir)Src\Mouse;$(SolutionDir)Src\Graphics;$(SolutionDir)Src\ImGui</IncludePath>
+    <IncludePath>$(SolutionDir)Includes;$(SolutionDir)Src;$(SolutionDir)Src\Input;$(SolutionDir)Src\Keyboard;$(SolutionDir)Src\Mouse;$(SolutionDir)Src\Graphics;$(SolutionDir)Src\ImGui;$(SolutionDir)Src\nlohmann</IncludePath>
     <LibraryPath>$(SolutionDir)Libs\$(Platform)\$(Configuration)\;$(LibraryPath)</LibraryPath>
     <OutDir>$(SolutionDir)Build\$(Platform)\$(Configuration)\</OutDir>
     <IntDir>Build\$(Platform)\$(Configuration)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>$(SolutionDir)Includes;$(SolutionDir)Src;$(SolutionDir)Src\Input;$(SolutionDir)Src\Keyboard;$(SolutionDir)Src\Mouse;$(SolutionDir)Src\Graphics;$(SolutionDir)Src\ImGui</IncludePath>
+    <IncludePath>$(SolutionDir)Includes;$(SolutionDir)Src;$(SolutionDir)Src\Input;$(SolutionDir)Src\Keyboard;$(SolutionDir)Src\Mouse;$(SolutionDir)Src\Graphics;$(SolutionDir)Src\ImGui;$(SolutionDir)Src\nlohmann</IncludePath>
     <LibraryPath>$(SolutionDir)Libs\$(Platform)\$(Configuration)\;$(LibraryPath)</LibraryPath>
     <OutDir>$(SolutionDir)Build\$(Platform)\$(Configuration)\</OutDir>
     <IntDir>Build\$(Platform)\$(Configuration)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>$(SolutionDir)Includes;$(SolutionDir)Src;$(SolutionDir)Src\Input;$(SolutionDir)Src\Keyboard;$(SolutionDir)Src\Mouse;$(SolutionDir)Src\Graphics;$(SolutionDir)Src\ImGui</IncludePath>
+    <IncludePath>$(SolutionDir)Includes;$(SolutionDir)Src;$(SolutionDir)Src\Input;$(SolutionDir)Src\Keyboard;$(SolutionDir)Src\Mouse;$(SolutionDir)Src\Graphics;$(SolutionDir)Src\ImGui;$(SolutionDir)Src\nlohmann</IncludePath>
     <LibraryPath>$(SolutionDir)Libs\$(Platform)\$(Configuration)\;$(LibraryPath)</LibraryPath>
     <OutDir>$(SolutionDir)Build\$(Platform)\$(Configuration)\</OutDir>
     <IntDir>Build\$(Platform)\$(Configuration)\</IntDir>

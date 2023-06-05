@@ -9,7 +9,7 @@ class CWindow
 public:
 	~CWindow();
 	
-	bool Init(HINSTANCE hInstance, CInput& input);
+	bool Init(std::string configPath, HINSTANCE hInstance, CInput& input);
 	bool ProcessMessages();
 	
 	HWND GetHWND() const { return _hwnd; }
@@ -21,13 +21,11 @@ private:
 	
 	HINSTANCE _hInstance = NULL;
 	HWND _hwnd = NULL;
-
+	
+	std::wstring mWTitle;
+	std::wstring mWClass;
 	int mWidth = 0;
 	int mHeight = 0;
-
-	// TODO delete
-	std::string mTitle;
-	std::wstring mWTitle;
-	std::string mClass;
-	std::wstring mWClass;
+	
+	std::string _configPath;
 };

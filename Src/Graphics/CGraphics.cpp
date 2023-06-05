@@ -5,8 +5,9 @@
 #include <imgui_impl_dx11.h>
 #include <imgui_impl_win32.h>
 
-bool CGraphics::Init(const CWindow& window)
+bool CGraphics::Init(std::string configPath, const CWindow& window)
 {
+	_configPath = std::move(configPath);
 	Fps.Start();
 
 	HWND hwnd = window.GetHWND();

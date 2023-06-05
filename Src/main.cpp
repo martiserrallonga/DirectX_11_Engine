@@ -7,7 +7,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 {
 
 	CEngine Engine;
-	if (!Engine.Init(hInstance)) exit(-1);
+	if (!Engine.Init("Data/Config/Engine.json", hInstance)) exit(-1);
 
 	while (Engine.ProcessMessages())
 	{

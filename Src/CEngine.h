@@ -3,11 +3,12 @@
 #include "CWindow.h"
 #include "CGraphics.h"
 #include "CTimer.h"
+#include <json.h>
 
 class CEngine
 {
 public:
-	bool Init(HINSTANCE aInstance);
+	bool Init(std::string configPath, HINSTANCE aInstance);
 	bool ProcessMessages();
 	void Update();
 	void Render();
@@ -17,4 +18,6 @@ private:
 	CWindow Window;
 	CGraphics Graphics;
 	CTimer Timer;
+
+	std::string _configPath;
 };

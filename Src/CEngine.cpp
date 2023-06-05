@@ -1,12 +1,15 @@
 #include "CEngine.h"
+#include "Utils/Format.h"
 
-bool CEngine::Init(HINSTANCE hInstance)
+bool CEngine::Init(std::string configPath, HINSTANCE hInstance)
 {
+	_configPath = std::move(configPath);
+	json config = Format::JsonFile(_configPath);
+
+	if (!Window.Init(config.at("WindowConfig"), hInstance, Input)) return false;
+	if (!Graphics.Init(config.at("GraphicsConfig"), Window)) return false;
+
 	Timer.Start();
-
-	if (!Window.Init(hInstance, Input)) return false;
-	if (!Graphics.Init(Window)) return false;
-
 	return true;
 }
 

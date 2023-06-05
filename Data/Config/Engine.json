@@ -1,0 +1,4 @@
+{
+    "WindowConfig" : "Data/Config/Window.json",
+    "GraphicsConfig" : "Data/Config/Graphics.json"
+}
