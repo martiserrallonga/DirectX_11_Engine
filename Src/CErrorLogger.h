@@ -9,6 +9,4 @@ public:
 	static void Log(HRESULT hr, std::string aMessage);
 	static void Log(HRESULT hr, std::wstring aMessage);
 	static void Log(CComException& aException);
-
 };
-

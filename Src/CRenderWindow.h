@@ -1,28 +1,33 @@
 #pragma once
-#include "CErrorLogger.h"
+#include <Windows.h>
+#include <string>
 
-class CWindowContainer;
+class CInput;
 
 class CRenderWindow
 {
 public:
 	~CRenderWindow();
 	
-	bool Init(CWindowContainer* aWindowContainer, HINSTANCE hInstance, std::string aWindowTitle, std::string aWindowClass, int width, int height);
+	bool Init(HINSTANCE hInstance, CInput& input);
 	bool ProcessMessages();
-	HWND GetHWND() const;
+	
+	HWND GetHWND() const { return _hwnd; }
+	int GetWidth() const { return mWidth; }
+	int GetHeight() const { return mHeight; }
 
 private:
-	void RegisterWindowClass() const;
+	void RegisterWindowClass();
 	
-	HWND Handle = NULL;						// Handle to this Window
-	HINSTANCE hInstance = NULL;		// Handle to the Application instance
+	HINSTANCE _hInstance = NULL;
+	HWND _hwnd = NULL;
+
+	int mWidth = 0;
+	int mHeight = 0;
+
+	// TODO delete
 	std::string mTitle;
 	std::wstring mWTitle;
 	std::string mClass;
 	std::wstring mWClass;
-	int mWidth = 0;
-	int mHeight = 0;
-
 };
-

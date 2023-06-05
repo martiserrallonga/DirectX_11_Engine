@@ -1,17 +1,17 @@
 #include "CGraphics.h"
 #include "CComException.h"
 #include "CPathProvider.h"
+#include <imgui.h>
+#include <imgui_impl_dx11.h>
+#include <imgui_impl_win32.h>
 
-#include "imgui.h"
-#include "imgui_impl_dx11.h"
-#include "imgui_impl_win32.h"
-
-bool CGraphics::Init(HWND hwnd, int aWidth, int aHeight)
+bool CGraphics::Init(const CRenderWindow& window)
 {
 	Fps.Start();
 
-	mWindowWidth = aWidth;
-	mWindowHeight = aHeight;
+	HWND hwnd = window.GetHWND();
+	mWindowWidth = window.GetWidth();
+	mWindowHeight = window.GetHeight();
 
 	if (!InitDirectX(hwnd)) return false;
 	if (!InitShaders()) return false;

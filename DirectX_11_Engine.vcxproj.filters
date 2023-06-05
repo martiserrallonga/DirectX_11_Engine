@@ -37,6 +37,12 @@
     <Filter Include="Source Files\ImGui">
       <UniqueIdentifier>{e74507aa-2163-47e1-b819-8ecbed381803}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Input">
+      <UniqueIdentifier>{07a266ca-b98e-4029-9b6c-86dcb47e1fb2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Input">
+      <UniqueIdentifier>{4f19c1b1-8f28-4231-8a1c-ba4de92f47e0}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Src\CErrorLogger.cpp">
@@ -52,9 +58,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Src\CEngine.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Src\CWindowContainer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Src\Keyboard\CKeyboardEvent.cpp">
@@ -123,6 +126,9 @@
     <ClCompile Include="Src\Graphics\CLight.cpp">
       <Filter>Source Files\Graphics</Filter>
     </ClCompile>
+    <ClCompile Include="Src\Input\CInput.cpp">
+      <Filter>Source Files\Input</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Src\CErrorLogger.h">
@@ -135,9 +141,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Src\CEngine.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Src\CWindowContainer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Src\Keyboard\CKeyboardEvent.h">
@@ -286,6 +289,9 @@
     </ClInclude>
     <ClInclude Include="Src\Graphics\CLight.h">
       <Filter>Header Files\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Input\CInput.h">
+      <Filter>Header Files\Input</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

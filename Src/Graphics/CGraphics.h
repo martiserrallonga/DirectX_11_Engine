@@ -1,12 +1,11 @@
 #pragma once
+#include "CRenderWindow.h"
 #include "CAdapterReader.h"
 #include "CCamera.h"
 #include "CLight.h"
 #include "CTimer.h"
-
 #include "Shaders.h"
 #include "CGameEntity.h"
-
 #include <WICTextureLoader.h>
 #include <SpriteBatch.h>
 #include <SpriteFont.h>
@@ -15,7 +14,7 @@
 class CGraphics
 {
 public:
-	bool Init(HWND hwnd, int aWidth, int aHeight);
+	bool Init(const CRenderWindow& window);
 	void Render();
 
 	CCamera Camera;

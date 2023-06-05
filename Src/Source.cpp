@@ -1,4 +1,5 @@
-#include "CRenderWindow.h"
+// TODO Rename file to main.cpp
+
 #include "CEngine.h"
 
 int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
@@ -8,7 +9,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 {
 
 	CEngine Engine;
-	if (!Engine.Init(hInstance, "Title", "MyWindowClass", 800, 600)) return 0;
+	if (!Engine.Init(hInstance)) exit(-1);
 
 	while (Engine.ProcessMessages())
 	{
